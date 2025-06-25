@@ -35,7 +35,7 @@
 ## プロジェクト構造
 
 ```
-novel-site/
+app/
 ├── frontend/          # Vue.jsフロントエンド
 ├── backend/           # Djangoバックエンド
 ├── docker/            # Docker設定ファイル

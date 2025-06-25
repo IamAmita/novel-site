@@ -1,8 +1,8 @@
 -- PostgreSQL初期化スクリプト
--- 小説投稿サイト用データベース設定
+-- app用データベース設定
 
 -- データベース作成（既にdocker-composeで作成済み）
--- CREATE DATABASE novel_site;
+-- CREATE DATABASE app;
 
 -- 拡張機能の有効化
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
