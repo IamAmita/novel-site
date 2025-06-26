@@ -3,7 +3,7 @@
 ---
 
 ## 概要
-ユーザーが投稿したコメントを管理するテーブルです。多様な対象（小説・設定・話など）にコメントでき、本文内で`>>番号`形式の返信指定とGood/Bad評価機能を含みます。コメント対象はclass_id（master_classes.id, 2桁:10〜99）とtarget_table_id（master_tables.id, 4桁:1000〜9999）で管理します。
+ユーザーが投稿したコメントを管理するテーブルです。多様な対象（小説・設定・話・掲示板の投稿など）にコメントでき、本文内で`>>番号`形式の返信指定とGood/Bad評価機能を含みます。コメント対象はclass_id（master_classes.id, 2桁:10〜99）とtable_id（master_tables.id, 4桁:1000〜9999）で管理します。
 
 ---
 
@@ -14,7 +14,7 @@
 | id                 | int        | ○    | ○    | コメントID（主キー）                 |
 | user_id            | int        | ○    |      | 投稿者ユーザーID（外部キー）         |
 | class_id           | int        | ○    |      | コメント対象クラスID（master_classes.id, 2桁:10〜99） |
-| target_table_id    | int        | ○    |      | コメント対象テーブルID（master_tables.id, 4桁:1000〜9999） |
+| table_id    | int        | ○    |      | コメント対象テーブルID（master_tables.id, 4桁:1000〜9999） |
 | target_id          | int        | ○    |      | コメント対象ID                       |
 | body               | text       | ○    |      | コメント本文（>>番号で返信指定）     |
 | is_deleted         | tinyint    | ○    |      | 通報による自動削除フラグ             |
@@ -29,7 +29,7 @@
 |----------------|--------|------|------|
 | PRIMARY KEY | id | 主キー | コメントIDの主キー |
 | INDEX | user_id | 通常 | 投稿者検索用 |
-| INDEX | class_id, target_table_id, target_id | 複合 | 対象検索用 |
+| INDEX | class_id, table_id, target_id | 複合 | 対象検索用 |
 | INDEX | is_deleted | 通常 | 削除状態検索用 |
 | INDEX | created_at | 通常 | 作成日時検索用 |
 
@@ -43,18 +43,18 @@
 ### 外部キー制約
 - `user_id` → `users.id`: 投稿者ユーザーテーブルを参照
 - `class_id` → `master_classes.id`: クラス種別マスタを参照
-- `target_table_id` → `master_tables.id`: テーブル種別マスタを参照
+- `table_id` → `master_tables.id`: テーブル種別マスタを参照
 
 ### チェック制約
 - `class_id`: 10〜99のいずれかである必要があります
-- `target_table_id`: 1000〜9999のいずれかである必要があります
+- `table_id`: 1000〜9999のいずれかである必要があります
 - `is_deleted`: 0または1のみ許可
 
 ---
 
 ## 設計補足
 
-### コメント対象（class_id, target_table_id, target_id）
+### コメント対象（class_id, table_id, target_id）
 - master_classesテーブルで定義されたクラスID（例：10=小説、20=設定、30=話など）
 - master_tablesテーブルで定義されたテーブルID（例：1001=novels, 2001=settings, 3001=episodesなど）
 - target_idは対象テーブルの主キーID
@@ -80,7 +80,7 @@
 
 ## コメントの流れ例
 
-| コメントID | 投稿者 | class_id | target_table_id | target_id | 本文 | 説明 |
+| コメントID | 投稿者 | class_id | table_id | target_id | 本文 | 説明 |
 |------------|--------|----------|-----------------|-----------|------|------|
 | 1 | ユーザーA | 10 | 1001 | 1 | 面白い小説ですね！ | 小説へのコメント |
 | 2 | ユーザーB | 10 | 1001 | 1 | >>1 ありがとうございます！ | コメント1への返信 |

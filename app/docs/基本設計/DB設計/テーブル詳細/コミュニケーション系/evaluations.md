@@ -3,7 +3,7 @@
 ---
 
 ## 概要
-ユーザーの評価（Good/Bad）を管理するテーブルです。コメント、レビューなど多様な対象への評価履歴を保持し、重複評価を防ぎます。評価対象はclass_id（master_classes.id, 2桁:10〜99）とtarget_table_id（master_tables.id, 4桁:1000〜9999）で管理します。
+ユーザーの評価（Good/Bad）を管理するテーブルです。コメント、レビューなど多様な対象への評価履歴を保持し、重複評価を防ぎます。評価対象はclass_id（master_classes.id, 2桁:10〜99）とtable_id（master_tables.id, 4桁:1000〜9999）で管理します。
 
 ---
 
@@ -13,7 +13,7 @@
 |--------------------|------------|------|------|--------------------------------------|
 | id                 | int        | ○    | ○    | 評価ID（主キー）                     |
 | class_id           | int        | ○    |      | 評価対象クラスID（master_classes.id, 2桁:10〜99） |
-| target_table_id    | int        | ○    |      | 評価対象テーブルID（master_tables.id, 4桁:1000〜9999） |
+| table_id    | int        | ○    |      | 評価対象テーブルID（master_tables.id, 4桁:1000〜9999） |
 | target_id          | int        | ○    |      | 評価対象ID                           |
 | user_id            | int        | ○    |      | 評価者ID（外部キー）                 |
 | evaluation_type    | tinyint    | ○    |      | 評価種別                             |
@@ -27,10 +27,10 @@
 | インデックス名 | 種類 | 説明 | カラム |
 |----------------|------|------|--------|
 | PRIMARY KEY | 主キー | 評価IDの主キー | id |
-| UNIQUE | 複合一意 | 重複評価防止 | class_id, target_table_id, target_id, user_id |
+| UNIQUE | 複合一意 | 重複評価防止 | class_id, table_id, target_id, user_id |
 | INDEX | 複合 | ユーザーの評価履歴検索用 | user_id, evaluation_type |
-| INDEX | 複合 | 対象の評価集計用 | class_id, target_table_id, target_id |
-| INDEX | 複合 | 評価種別別集計用 | class_id, target_table_id, target_id, evaluation_type |
+| INDEX | 複合 | 対象の評価集計用 | class_id, table_id, target_id |
+| INDEX | 複合 | 評価種別別集計用 | class_id, table_id, target_id, evaluation_type |
 
 ---
 
@@ -42,21 +42,21 @@
 ### 外部キー制約
 - `user_id` → `users.id`: 評価者ユーザーテーブルを参照
 - `class_id` → `master_classes.id`: クラス種別マスタを参照
-- `target_table_id` → `master_tables.id`: テーブル種別マスタを参照
+- `table_id` → `master_tables.id`: テーブル種別マスタを参照
 
 ### ユニーク制約
-- `class_id, target_table_id, target_id, user_id`: 1ユーザーにつき1対象に1つの評価のみ許可
+- `class_id, table_id, target_id, user_id`: 1ユーザーにつき1対象に1つの評価のみ許可
 
 ### チェック制約
 - `class_id`: 10〜99のいずれかである必要があります
-- `target_table_id`: 1000〜9999のいずれかである必要があります
+- `table_id`: 1000〜9999のいずれかである必要があります
 - `evaluation_type`: 0、1、2のいずれかである必要があります
 
 ---
 
 ## 設計補足
 
-### 評価対象（class_id, target_table_id, target_id）
+### 評価対象（class_id, table_id, target_id）
 - master_classesテーブルで定義されたクラスID（例：10=コメント、20=レビューなど）
 - master_tablesテーブルで定義されたテーブルID（例：1001=comments, 2001=reviewsなど）
 - target_idは対象テーブルの主キーID
