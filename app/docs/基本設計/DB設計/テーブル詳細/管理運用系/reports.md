@@ -1,42 +1,77 @@
-# reports テーブル詳細
+# reports テーブル詳細（通報管理）
 
 ---
 
 ## 概要
-ユーザーによる通報を管理するテーブルです。コメント、小説、ユーザーなど多様な対象への通報を一元管理し、通報の詳細情報（通報者、理由、ステータス）を記録します。
+ユーザーや作品などの不適切な行為・内容を通報するための管理テーブルです。通報対象テーブルID（target_table_id）はmaster_tables.id、クラスID（class_id）はmaster_classes.id、ステータス（status）はmaster_statuses.id、通報理由（reason_id）はmaster_reasons.idを参照します。
 
 ---
 
 ## テーブル定義
 
-| 属性名             | 型         | 必須 | 一意 | 説明                                 |
-|--------------------|------------|------|------|--------------------------------------|
-| id                 | int        | ○    | ○    | 通報ID（主キー）                     |
-| reporter_id        | int        | ○    |      | 通報者ユーザーID（外部キー）         |
-| target_type        | tinyint    | ○    |      | 通報対象種別                         |
-| target_id          | int        | ○    |      | 通報対象ID                           |
-| reason             | varchar    | ○    |      | 通報理由                             |
-| description        | text       |      |      | 通報の詳細説明                       |
-| status             | varchar    | ○    |      | 処理ステータス                       |
-| admin_notes        | text       |      |      | 管理者メモ                           |
-| is_archived        | tinyint    | ○    |      | 論理削除フラグ                       |
-| created_at         | datetime   | ○    |      | 通報日時                             |
-| updated_at         | datetime   |      |      | 更新日時                             |
-| processed_at       | datetime   |      |      | 処理完了日時                         |
+| 属性名           | 型      | 必須 | 一意 | 説明                                 |
+|------------------|---------|------|------|--------------------------------------|
+| id               | int     | ○    | ○    | 通報ID（主キー）                     |
+| class_id         | int     | ○    |      | クラスID（master_classes.id, 2桁:10〜99）|
+| target_table_id  | int     | ○    |      | 通報対象テーブルID（master_tables.idを参照）|
+| target_id        | int     | ○    |      | 通報対象レコードID                   |
+| reported_by      | int     | ○    |      | 通報ユーザーID                       |
+| reason_id        | int     | ○    |      | 通報理由ID（master_reasons.idを参照）|
+| description      | text    |      |      | 補足説明・詳細（任意）               |
+| status           | int     | ○    |      | ステータスID（master_statuses.idを参照）|
+| created_at       | datetime| ○    |      | 通報日時                             |
+| updated_at       | datetime|      |      | 更新日時                             |
 
 ---
 
 ## インデックス
 
-| インデックス名 | カラム | 種類 | 説明 |
-|----------------|--------|------|------|
-| PRIMARY KEY | id | 主キー | 通報IDの主キー |
-| INDEX | reporter_id | 通常 | 通報者検索用 |
-| INDEX | target_type, target_id | 複合 | 対象検索用 |
-| INDEX | status | 通常 | ステータス検索用 |
-| INDEX | is_archived | 通常 | 論理削除フラグ検索用 |
-| INDEX | created_at | 通常 | 通報日時検索用 |
-| UNIQUE | reporter_id, target_type, target_id | 複合 | 重複通報防止用 |
+| インデックス名 | 種類   | 説明                   | カラム           |
+|----------------|--------|------------------------|------------------|
+| PRIMARY KEY    | 主キー | 主キー                 | id               |
+| INDEX          | 通常   | クラスID検索用         | class_id         |
+| INDEX          | 通常   | 対象テーブル検索用     | target_table_id  |
+| INDEX          | 通常   | 対象ID検索用           | target_id        |
+| INDEX          | 通常   | 通報ユーザー検索用     | reported_by      |
+| INDEX          | 通常   | ステータス検索用       | status           |
+| INDEX          | 通常   | 通報理由検索用         | reason_id        |
+| INDEX          | 通常   | 通報日時検索用         | created_at       |
+
+---
+
+## 設計補足
+- class_idはmaster_classes.idを参照する外部キーです（2桁:10〜99）。
+- target_table_idはmaster_tables.idを参照する外部キーです（4桁:1000〜9999）。
+- statusはmaster_statuses.idを参照する外部キーです。
+- reason_idはmaster_reasons.idを参照する外部キーです。
+- descriptionは通報理由の補足や詳細を記載する任意項目です。
+- target_idは通報対象テーブルの主キーIDです。
+- reported_byは通報を行ったユーザーIDです。
+- created_at/updated_atで通報日時・更新日時を記録します。
+
+---
+
+## 運用例
+| id | class_id | target_table_id | target_id | reported_by | reason_id | description      | status | created_at          | updated_at          |
+|----|----------|-----------------|-----------|-------------|-----------|------------------|--------|---------------------|---------------------|
+| 1  | 10       | 1001            | 1001      | 10          | 100       | 不適切な発言      | 1      | 2024-06-01 12:00:00 | 2024-06-01 12:10:00 |
+| 2  | 20       | 2001            | 2002      | 11          | 101       |                  | 2      | 2024-06-02 13:00:00 | 2024-06-02 13:05:00 |
+| 3  | 30       | 3001            | 1002      | 12          | 150       | その他詳細説明    | 1      | 2024-06-03 14:00:00 | 2024-06-03 14:10:00 |
+|... | ...      | ...             | ...       | ...         | ...       | ...              | ...    | ...                 | ...                 |
+
+---
+
+## 関連テーブル
+- master_classes: class_idで参照（クラス種別管理）
+- master_tables: target_table_idで参照（通報対象テーブル管理）
+- master_statuses: statusで参照（ステータス管理）
+- master_reasons: reason_idで参照（通報理由管理）
+- users: reported_byで参照（通報ユーザー管理）
+
+---
+
+## 備考
+- 通報対象テーブルやクラス、ステータス、理由の拡張・管理もマスタテーブルで容易に行えます。
 
 ---
 
@@ -46,66 +81,28 @@
 - `id`: 自動採番（AUTO_INCREMENT）
 
 ### 外部キー制約
-- `reporter_id` → `users.id`: 通報者ユーザーテーブルを参照
-- `target_type` → `target_types.id`: 対象種別定義テーブルを参照
+- `class_id` → `master_classes.id`: クラス種別マスタを参照
+- `reported_by` → `users.id`: 通報者ユーザーテーブルを参照
+- `target_table_id` → `master_tables.id`: 対象テーブル定義マスタを参照
+- `reason_id` → `master_reasons.id`: 通報理由マスタを参照
 
 ### ユニーク制約
-- `reporter_id, target_type, target_id`: 同一ユーザーの同一対象への重複通報を防止
+- `reported_by, class_id, target_table_id, target_id`: 同一ユーザーの同一対象への重複通報を防止
 
 ### チェック制約
-- `target_type`: 0、1、2、3、4、5、6のいずれかである必要があります
-- `status`: 'pending', 'approved', 'rejected', 'ignored'のいずれかである必要があります
-- `reason`: 空文字列は許可しない
-- `is_archived`: 0または1のみ許可
-
----
-
-## 設計補足
-
-### 通報対象（target_type, target_id）
-- master_classesテーブルで定義された分類ID
-- `0`: コメントへの通報
-- `1`: 小説作品への通報
-- `2`: 設定（世界観・キャラ等）への通報
-- `3`: 話（エピソード）への通報
-- `4`: レビューへの通報
-- `5`: ユーザーへの通報
-- `6`: グループへの通報
-
-### 通報理由（reason）
-- `spam`: スパム・宣伝
-- `inappropriate`: 不適切な内容
-- `copyright`: 著作権侵害
-- `harassment`: ハラスメント
-- `violence`: 暴力・脅迫
-- `other`: その他
-
-### 処理ステータス（status）
-- `pending`: 未処理
-- `approved`: 承認（対象を削除・制限）
-- `rejected`: 却下（通報を無効）
-- `ignored`: 無視（軽微な問題）
-
-### 重複通報防止
-- 同一ユーザーが同一対象を通報した場合、既存レコードを更新
-- 通報理由や詳細説明の変更が可能
-
-### 論理削除（is_archived）
-- 通報レコードの論理削除フラグ（0:有効、1:アーカイブ＝削除済み）
-- 全テーブルで「1が削除済み、0が有効」で統一
-- 処理完了後はアーカイブ状態に設定
-- 分析・監査目的で履歴を保持
-- 表示時はアーカイブされていない通報のみ表示
+- `class_id`: 10〜99のいずれかである必要があります
+- `target_table_id`: 1000〜9999のいずれかである必要があります
+- `status`: 0、1のいずれかである必要があります
 
 ---
 
 ## 通報の流れ例
 
-| 通報ID | 通報者 | target_type | target_id | 理由 | ステータス | 説明 |
-|--------|--------|-------------|-----------|------|------------|------|
-| 1 | ユーザーA | 0 | 5 | spam | pending | 宣伝コメント |
-| 2 | ユーザーB | 0 | 5 | inappropriate | pending | 不適切な内容 |
-| 3 | ユーザーC | 1 | 10 | copyright | approved | 著作権侵害 |
+| 通報ID | 通報者 | class_id | target_table_id | target_id | reason_id | description | ステータス | 説明 |
+|--------|--------|----------|-----------------|-----------|-----------|-------------|------------|------|
+| 1 | ユーザーA | 10 | 1001 | 5 | 100 | 宣伝コメント | pending | master_reasons参照 |
+| 2 | ユーザーB | 10 | 1001 | 5 | 101 | 不適切な内容 | pending | master_reasons参照 |
+| 3 | ユーザーC | 20 | 2001 | 10 | 150 | 著作権侵害   | approved | master_reasons参照 |
 
 ---
 
