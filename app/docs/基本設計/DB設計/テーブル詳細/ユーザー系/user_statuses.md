@@ -15,7 +15,6 @@
 | user_id            | int        | ○    |      | ユーザーID（外部キー）               |
 | status_id          | tinyint    | ○    |      | ステータス定義ID（外部キー）         |
 | created_at         | datetime   | ○    |      | ステータス変更日時                   |
-| updated_at         | datetime   |      |      | 更新日時                             |
 
 ---
 

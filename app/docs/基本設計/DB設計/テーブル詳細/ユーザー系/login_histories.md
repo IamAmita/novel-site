@@ -16,8 +16,8 @@
 | login_at       | datetime   | ○    |      | ログイン日時                 |
 | ip_address     | varchar    |      |      | IPアドレス                   |
 | user_agent     | varchar    |      |      | 端末情報                     |
-| success        | tinyint    | ○    |      | 成功/失敗フラグ（0:失敗、1:成功） |
-| fail_reason    | text       |      |      | 失敗理由                     |
+| success        | tinyint    | ○    |      | 成功/失敗フラグ（0:成功、1:失敗） |
+| fail_reason_id | int        |      |      | 失敗理由ID（master_reasons参照） |
 
 ---
 
@@ -30,6 +30,7 @@
 | INDEX | 通常 | ログイン日時検索用 | login_at |
 | INDEX | 通常 | 成功/失敗検索用 | success |
 | INDEX | 通常 | IPアドレス検索用 | ip_address |
+| INDEX | 通常 | 失敗理由検索用 | fail_reason_id |
 
 ---
 
@@ -40,6 +41,7 @@
 
 ### 外部キー制約
 - `user_id` → `users.id`: ユーザーテーブルを参照
+- `fail_reason_id` → `master_reasons.id`: 理由マスタを参照
 
 ### チェック制約
 - `success`: 0または1の値のみ許可
@@ -63,18 +65,20 @@
 - 不正アクセス検知に使用
 
 ### 成功/失敗フラグ（success）
-- `1`: ログイン成功
-- `0`: ログイン失敗
+- `0`: ログイン成功
+- `1`: ログイン失敗
 
-### 失敗理由（fail_reason）
-- ログイン失敗時の理由
-- 例：「パスワードが間違っています」「アカウントが無効です」など
+### 失敗理由ID（fail_reason_id）
+- master_reasonsテーブルで管理
+- 例：1=パスワード誤り、2=アカウント無効、3=2FA失敗など
+- 失敗理由の集計や多言語対応が容易
 
 ---
 
 ## 関連テーブル
 
 - `users`: 多対1の関係（ユーザー基本情報）
+- `master_reasons`: 多対1の関係（失敗理由マスタ）
 
 ---
 
@@ -85,4 +89,5 @@
 3. **プライバシー**: 個人情報の適切な管理
 4. **パフォーマンス**: インデックスの最適化
 
-- セキュリティ監査に活用 
+- セキュリティ監査に活用
+- セキュリティ監査や集計時にfail_reason_idで分類可能 
