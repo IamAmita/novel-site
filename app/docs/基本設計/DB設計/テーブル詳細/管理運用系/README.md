@@ -13,13 +13,16 @@
 - テンプレートや定義データは柔軟な拡張性を確保
 - 通報やレポートは適切なステータス管理とワークフローを実装
 - 運用履歴は一元管理し、監査・追跡・分析を可能にする
+- **NULLは「未設定」を意味する。全体適用や特別な意味には使わない。**
 
 ---
 
 ## テーブル一覧
 
 ### 定義・マスター
-- [target_types.md](./target_types.md) - 対象種別定義テーブル
+- [master_classes.md](./master_classes.md) - 分類定義テーブル
+- [master_statuses.md](./master_statuses.md) - ステータス定義テーブル
+- [master_permissions.md](./master_permissions.md) - 権限定義テーブル
 - [templates.md](./templates.md) - テンプレート管理テーブル
 
 ### 運用・管理
@@ -31,12 +34,16 @@
 ## テーブル関係図
 
 ```
-target_types (1) ←→ (N) comments
-target_types (1) ←→ (N) reviews
-target_types (1) ←→ (N) notifications
-target_types (1) ←→ (N) evaluations
-target_types (1) ←→ (N) reports
-target_types (1) ←→ (N) operation_histories
+master_classes (1) ←→ (N) comments
+master_classes (1) ←→ (N) reviews
+master_classes (1) ←→ (N) notifications
+master_classes (1) ←→ (N) evaluations
+master_classes (1) ←→ (N) reports
+master_classes (1) ←→ (N) operation_histories
+master_classes (1) ←→ (N) master_statuses
+
+master_statuses (1) ←→ (N) user_statuses
+master_permissions (1) ←→ (N) user_permissions
 
 templates (1) ←→ (N) notifications
 templates (1) ←→ (N) operation_histories
@@ -49,6 +56,9 @@ users (1) ←→ (N) operation_histories
 
 ## 主要な考慮点
 - マスターデータの一元管理と整合性確保
+- 分類定義の統一管理と拡張性
+- ステータス定義の統一管理と拡張性
+- 権限定義の統一管理と階層構造
 - 運用データの適切な履歴管理
 - テンプレートによる柔軟な通知管理
 - 通報の適切なワークフロー管理

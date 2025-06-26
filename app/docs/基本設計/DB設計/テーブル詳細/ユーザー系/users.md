@@ -108,9 +108,9 @@
 - `user_statuses`: 1対多の関係（ユーザーのステータス管理）
 - `user_profiles`: 1対1の関係（ユーザープロフィール情報）
 - `two_factor_auth`: 1対多の関係（2段階認証設定）
-- `login_history`: 1対多の関係（ログイン履歴）
+- `login_histories`: 1対多の関係（ログイン履歴）
 - `user_permissions`: 1対多の関係（ユーザー権限管理）
-- `user_history`: 1対多の関係（ユーザー情報変更履歴）
+- `user_histories`: 1対多の関係（ユーザー情報変更履歴）
 
 ---
 

@@ -1,4 +1,4 @@
-# login_history テーブル詳細
+# login_histories テーブル詳細
 
 ---
 

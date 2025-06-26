@@ -8,7 +8,7 @@
 ---
 
 ## 設計方針
-- target_typeはtarget_typesテーブルで一元管理し、データの整合性を保証
+- master_classesは分類定義テーブルで一元管理し、データの整合性を保証
 - コメントは共通テーブル方式（target_type, target_id）で管理し、作品・設定・話など多様な対象に柔軟に対応
 - レビューや通知も、対象ごとにtarget_type/target_idで管理する設計を推奨
 - 論理削除（deleted_at）カラムを持たせ、物理削除は原則行わず、必要に応じてアーカイブ
@@ -33,11 +33,11 @@
 ## テーブル関係図
 
 ```
-target_types (1) ←→ (N) comments
-target_types (1) ←→ (N) reviews
-target_types (1) ←→ (N) notifications
-target_types (1) ←→ (N) evaluations
-target_types (1) ←→ (N) reports
+master_classes (1) ←→ (N) comments
+master_classes (1) ←→ (N) reviews
+master_classes (1) ←→ (N) notifications
+master_classes (1) ←→ (N) evaluations
+master_classes (1) ←→ (N) reports
 
 users (1) ←→ (N) comments
 users (1) ←→ (N) reviews

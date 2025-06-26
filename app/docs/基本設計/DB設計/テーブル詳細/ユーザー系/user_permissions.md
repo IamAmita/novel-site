@@ -3,7 +3,7 @@
 ---
 
 ## 概要
-ユーザーに付与された権限を管理するテーブルです。ユーザーID、権限ID、付与者、付与日時などを含みます。
+ユーザーに付与された権限を管理するテーブルです。ユーザーID、権限ID、付与日時などを含みます。
 
 ---
 
@@ -14,10 +14,9 @@
 | id             | int        | ○    | ○    | 権限管理ID（主キー）                 |
 | user_id        | int        | ○    |      | ユーザーID（外部キー）               |
 | permission_id  | int        | ○    |      | 権限定義ID（外部キー）               |
-| granted_by     | int        |      |      | 権限付与者ユーザーID                 |
+| target_type    | tinyint    | ○    |      | 権限対象種別（master_classesテーブル参照） |
+| target_id      | int        | ○    |      | 権限対象ID（target_typeで指定されたテーブルの主キー） |
 | created_at     | datetime   | ○    |      | 権限付与日時                         |
-| updated_at     | datetime   |      |      | 更新日時                             |
-| deleted_at     | datetime   |      |      | 論理削除用                           |
 
 ---
 
@@ -26,12 +25,12 @@
 | インデックス名 | 種類 | 説明 | カラム |
 |----------------|------|------|--------|
 | PRIMARY KEY | 主キー | 権限管理IDの主キー | id |
-| UNIQUE | 複合一意 | ユーザー・権限の組み合わせ一意制約 | user_id, permission_id |
+| UNIQUE | 複合一意 | ユーザー・権限・対象の組み合わせ一意制約 | user_id, permission_id, target_type, target_id |
 | INDEX | 通常 | ユーザーID検索用 | user_id |
 | INDEX | 通常 | 権限ID検索用 | permission_id |
-| INDEX | 通常 | 付与者検索用 | granted_by |
+| INDEX | 通常 | 対象種別検索用 | target_type |
+| INDEX | 通常 | 対象ID検索用 | target_id |
 | INDEX | 通常 | 付与日時検索用 | created_at |
-| INDEX | 通常 | 論理削除検索用 | deleted_at |
 
 ---
 
@@ -45,8 +44,8 @@
 
 ### 外部キー制約
 - `user_id` → `users.id`: ユーザーテーブルを参照
-- `permission_id` → `permissions.id`: 権限定義テーブルを参照
-- `granted_by` → `users.id`: 権限付与者ユーザーテーブルを参照
+- `permission_id` → `master_permissions.id`: 権限定義テーブルを参照
+- `target_type` → `master_classes.id`: 分類定義テーブルを参照
 
 ### チェック制約
 - `user_id` ≠ `granted_by`: 自分に権限を付与することはできません
@@ -63,21 +62,26 @@
 - 付与される権限の定義
 - 存在する権限である必要があります
 
+### 権限対象種別（target_type）
+- master_classesテーブルで定義された対象種別のID
+- 例：0（コメント）、1（小説）、2（設定）など
+
+### 権限対象ID（target_id）
+- target_typeで指定された種別の主キーID
+- 例：target_type=1（小説）の場合はnovelsテーブルのid
+- 例：target_type=0（コメント）の場合はcommentsテーブルのid
+
 ### 権限付与者（granted_by）
-- 権限を付与したユーザー
 - 履歴追跡のために記録
 - 自分に権限を付与することはできません
-
-### 論理削除（deleted_at）
-- 権限の取り消し時に論理削除
-- 履歴保持のため物理削除は行わない
 
 ---
 
 ## 関連テーブル
 
 - `users`: 多対1の関係（権限を付与されるユーザー）
-- `permissions`: 多対1の関係（付与される権限）
+- `master_permissions`: 多対1の関係（付与される権限）
+- `master_classes`: 多対1の関係（分類定義）
 - `users`: 多対1の関係（権限付与者）
 
 ---
@@ -87,4 +91,7 @@
 1. **権限付与**: 適切な権限を持つユーザーのみが付与可能
 2. **権限取り消し**: 論理削除で履歴を保持
 3. **権限継承**: 権限の階層構造の管理
-4. **監査**: 権限変更の履歴管理 
+4. **監査**: 権限変更の履歴管理
+
+## 備考
+- 権限の付与・削除などの操作履歴（付与者・削除者等）はuser_historiesテーブルで一元管理する。 

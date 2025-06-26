@@ -25,7 +25,7 @@
 
 ### 認証・セキュリティ
 - [two_factor_auth.md](./two_factor_auth.md) - 2段階認証設定
-- [login_history.md](./login_history.md) - ログイン履歴
+- [login_histories.md](./login_histories.md) - ログイン履歴
 
 ### 権限管理
 - [permissions.md](./permissions.md) - 権限定義
@@ -41,7 +41,7 @@
 - [reports.md](./reports.md) - 通報
 
 ### 履歴・ログ
-- [user_history.md](./user_history.md) - ユーザー情報変更履歴
+- [user_histories.md](./user_histories.md) - ユーザー情報変更履歴
 
 ---
 
@@ -50,7 +50,7 @@
 ```
 users (1) ←→ (1) user_profiles
 users (1) ←→ (N) two_factor_auth
-users (1) ←→ (N) login_history
+users (1) ←→ (N) login_histories
 users (1) ←→ (N) user_permissions
 users (1) ←→ (N) follows (as follower)
 users (1) ←→ (N) follows (as followed)
@@ -60,7 +60,7 @@ users (1) ←→ (N) direct_messages (as receiver)
 users (1) ←→ (N) blocks (as blocker)
 users (1) ←→ (N) blocks (as blocked)
 users (1) ←→ (N) reports (as reporter)
-users (1) ←→ (N) user_history
+users (1) ←→ (N) user_histories
 
 permissions (1) ←→ (N) user_permissions
 ```
