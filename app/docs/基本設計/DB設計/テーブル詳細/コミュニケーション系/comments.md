@@ -14,7 +14,7 @@
 | id                 | int        | ○    | ○    | コメントID（主キー）                 |
 | user_id            | int        | ○    |      | 投稿者ユーザーID（外部キー）         |
 | class_id           | int        | ○    |      | コメント対象クラスID（master_classes.id, 2桁:10〜99） |
-| table_id    | int        | ○    |      | コメント対象テーブルID（master_tables.id, 4桁:1000〜9999） |
+| table_id           | int        | ○    |      | コメント対象テーブルID（master_tables.id, 4桁:1000〜9999） |
 | target_id          | int        | ○    |      | コメント対象ID                       |
 | body               | text       | ○    |      | コメント本文（>>番号で返信指定）     |
 | is_deleted         | tinyint    | ○    |      | 通報による自動削除フラグ             |
