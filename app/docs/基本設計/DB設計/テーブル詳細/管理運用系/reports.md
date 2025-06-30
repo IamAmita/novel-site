@@ -13,7 +13,7 @@
 |------------------|---------|------|------|--------------------------------------|
 | id               | int     | ○    | ○    | 通報ID（主キー）                     |
 | class_id         | int     | ○    |      | クラスID（master_classes.id, 2桁:10〜99）|
-| table_id  | int     | ○    |      | 通報対象テーブルID（master_tables.idを参照）|
+| table_id         | int     | ○    |      | 通報対象テーブルID（master_tables.idを参照）|
 | target_id        | int     | ○    |      | 通報対象レコードID                   |
 | reported_by      | int     | ○    |      | 通報ユーザーID                       |
 | reason_id        | int     | ○    |      | 通報理由ID（master_reasons.idを参照）|

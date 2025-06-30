@@ -3,7 +3,7 @@
 ---
 
 ## 概要
-通知ごとの状態（未読・既読・重要・緊急など）を柔軟に管理する中間テーブルです。1つの通知に複数の状態を持たせることができ、状態はmaster_statusesテーブルで一元管理します。
+通知のステータス（状態）を管理するテーブルです。通知の重要度（未読、既読、重要、緊急など）を履歴として保持し、通知の優先度管理やフィルタリング機能を提供します。
 
 ---
 
@@ -11,10 +11,14 @@
 
 | 属性名           | 型      | 必須 | 一意 | 説明                                 |
 |------------------|---------|------|------|--------------------------------------|
-| id               | int     | ○    | ○    | 通知ステータスID（主キー）           |
+| id               | int     | ○    | ○    | ステータス履歴ID（主キー）           |
 | notification_id  | int     | ○    |      | 通知ID（notifications.idを参照）     |
-| status_id        | int     | ○    |      | ステータスID（master_statuses.idを参照）|
-| created_at       | datetime| ○    |      | 登録日時                             |
+| status_id        | tinyint | ○    |      | ステータス定義ID（master_statuses.idを参照） |
+| status_value     | tinyint | ○    |      | ステータス値（数値コード）           |
+| created_at       | datetime| ○    |      | ステータス変更日時                   |
+| updated_at       | datetime| ○    |      | 更新日時                             |
+| deleted_at       | datetime|      |      | 削除日時                             |
+| is_deleted       | tinyint | ○    |      | 削除フラグ（0：有効、1：削除済み、デフォルト：0） |
 
 ---
 
@@ -22,10 +26,14 @@
 
 | インデックス名 | 種類   | 説明                   | カラム           |
 |----------------|--------|------------------------|------------------|
-| PRIMARY KEY    | 主キー | 主キー                 | id               |
-| UNIQUE         | 複合   | 1通知1状態の重複防止   | notification_id, status_id |
-| INDEX          | 通常   | 通知ID検索用           | notification_id  |
-| INDEX          | 通常   | ステータスID検索用     | status_id        |
+| PRIMARY KEY    | 主キー | ステータス履歴IDの主キー | id               |
+| UNIQUE         | 複合   | 1通知1ステータスの重複防止 | notification_id, status_id |
+| INDEX          | 通常   | 通知検索用             | notification_id  |
+| INDEX          | 複合   | 現在のステータス検索用 | notification_id, created_at |
+| INDEX          | 通常   | ステータス検索用       | status_id        |
+| INDEX          | 複合   | ユーザー別ステータス検索用 | notification_id, status_id |
+| INDEX          | 通常   | 変更日時検索用         | created_at       |
+| INDEX          | 通常   | 削除フラグ検索用       | is_deleted       |
 
 ---
 
@@ -36,37 +44,146 @@
 
 ### 外部キー制約
 - `notification_id` → `notifications.id`: 通知テーブルを参照
-- `status_id` → `master_statuses.id`: ステータスマスタを参照
+- `status_id` → `master_statuses.id`: ステータス定義テーブルを参照
 
 ### ユニーク制約
-- `notification_id, status_id`: 1通知に同じ状態を重複登録不可
+- `notification_id, status_id`: 1通知に同じステータスを重複登録不可
 
----
-
-## 運用例
-| id | notification_id | status_id | created_at          |
-|----|-----------------|-----------|---------------------|
-| 1  | 1001            | 1         | 2024-06-10 12:00:00 |
-| 2  | 1001            | 3         | 2024-06-10 12:00:00 |
-| 3  | 1002            | 1         | 2024-06-10 12:01:00 |
-|... | ...             | ...       | ...                 |
+### チェック制約
+- `status_id`: 通知用ステータス定義ID（301〜304）のみ許可
+- `status_value`: 1〜255の範囲の数値のみ許可
+- `is_deleted`: 0（有効）または1（削除済み）のみ許可、デフォルト値は0
 
 ---
 
 ## 設計補足
-- 1つの通知（notification_id）に複数の状態（status_id）を持たせることで、「重要かつ未読」などの複合状態を柔軟に表現できます。
-- ステータスの種類や意味はmaster_statusesテーブルで一元管理します。
-- 通知の状態追加・削除・履歴管理も容易です。
-- 通知の状態を判定する際は、notification_statusesを参照して該当するstatus_idが存在するかで判定します。
+
+### ステータスID（status_id）
+- master_statusesテーブルで定義された通知用ステータスのID
+- 301〜304の範囲で管理
+- 例：301（unread）、302（read）、303（important）、304（urgent）
+
+### ステータス値（status_value）
+- システム内部で使用する数値コード
+- master_statusesのstatus_valueと同期を保つ
+- アプリケーション側での判定に使用
+- 1〜255の範囲で管理（tinyintの制限）
+
+### 現在のステータス管理
+- 各通知の最新のレコードが現在のステータス
+- ステータス変更時は新しいレコードを作成
+- 履歴として過去のステータスも保持
+
+### 複合ステータス管理
+- 1つの通知に対して複数のステータスを同時付与可能
+- 例：「既読」かつ「重要」な通知
+- 通知の優先度や分類を柔軟に管理
+
+### 論理削除
+- 論理削除により、参照整合性を保ちながらデータの履歴を保持
+- 削除されたレコードは通常の検索から除外
+- is_deleted = 0：有効なレコード
+- is_deleted = 1：削除済みレコード
+
+---
+
+## ステータス例
+
+### 通知ステータス
+| status_id | status_value | ステータス名 | 説明 |
+|-----------|-------------|-------------|------|
+| 301 | 1 | unread | 未読 |
+| 302 | 2 | read | 既読 |
+| 303 | 3 | important | 重要 |
+| 304 | 4 | urgent | 緊急 |
+
+---
+
+## 運用例
+| id | notification_id | status_id | status_value | created_at          | is_deleted |
+|----|----------------|-----------|-------------|---------------------|------------|
+| 1  | 3001           | 301       | 1           | 2024-06-10 12:00:00 | 0          |
+| 2  | 3001           | 303       | 3           | 2024-06-10 12:00:00 | 0          |
+| 3  | 3001           | 302       | 2           | 2024-06-10 12:30:00 | 0          |
+| 4  | 3002           | 301       | 1           | 2024-06-11 09:15:00 | 0          |
+| 5  | 3002           | 304       | 4           | 2024-06-11 09:15:00 | 0          |
+| 6  | 3003           | 301       | 1           | 2024-06-12 14:20:00 | 0          |
+|... | ...            | ...       | ...         | ...                 | ...        |
 
 ---
 
 ## 関連テーブル
-- notifications: notification_idで参照（通知管理）
-- master_statuses: status_idで参照（状態マスタ）
+
+- `notifications`: notification_idで参照（通知管理）
+- `master_statuses`: status_idで参照（ステータス定義）
+- `users`: 通知受信ユーザー（notifications経由）
 
 ---
 
-## 備考
-- 通知の状態管理を柔軟かつ拡張性高く運用できます。
-- 状態の追加や意味変更もmaster_statuses側で一元管理可能です。 
+## 運用上の注意点
+
+1. **ステータス変更**: 変更時は新しいレコードを作成
+2. **複合ステータス**: 1通知に対して複数のステータスを同時付与可能
+3. **履歴管理**: ステータス変更の履歴を保持し、透明性を確保
+4. **パフォーマンス**: 現在のステータス取得は`notification_id, created_at`の複合インデックスを活用
+5. **データ整合性**: 通知削除時は関連するステータスレコードも論理削除
+6. **論理削除**: 削除されたレコードは通常の検索から除外し、履歴として保持
+7. **重複防止**: 複合一意制約により、1通知に同じステータスの重複設定を防止
+8. **自動判定**: 通知種別による自動ステータス付与
+9. **フィルタリング**: ステータスによる通知一覧のフィルタリング
+
+---
+
+## ステータス変更フロー
+
+### 自動付与（システム）
+1. 通知作成時に自動的にステータスを付与
+2. 通知種別に応じて重要度を判定
+3. 新しいレコードを作成
+
+### 手動変更（ユーザー）
+1. ユーザーが通知のステータスを変更
+2. 新しいレコードを作成
+3. 通知一覧を更新
+
+### 管理者設定
+1. 管理者が通知の重要度を設定
+2. 新しいレコードを作成
+3. ユーザーに通知
+
+---
+
+## 通知フィルタリング例
+
+### 未読通知
+```sql
+SELECT n.* FROM notifications n
+JOIN notification_statuses ns ON n.id = ns.notification_id
+WHERE ns.status_id = 301 AND ns.is_deleted = 0
+AND ns.created_at = (
+    SELECT MAX(created_at) FROM notification_statuses 
+    WHERE notification_id = n.id AND status_id = 301 AND is_deleted = 0
+);
+```
+
+### 重要通知
+```sql
+SELECT n.* FROM notifications n
+JOIN notification_statuses ns ON n.id = ns.notification_id
+WHERE ns.status_id = 303 AND ns.is_deleted = 0
+AND ns.created_at = (
+    SELECT MAX(created_at) FROM notification_statuses 
+    WHERE notification_id = n.id AND status_id = 303 AND is_deleted = 0
+);
+```
+
+### 緊急通知
+```sql
+SELECT n.* FROM notifications n
+JOIN notification_statuses ns ON n.id = ns.notification_id
+WHERE ns.status_id = 304 AND ns.is_deleted = 0
+AND ns.created_at = (
+    SELECT MAX(created_at) FROM notification_statuses 
+    WHERE notification_id = n.id AND status_id = 304 AND is_deleted = 0
+);
+``` 

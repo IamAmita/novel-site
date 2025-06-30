@@ -13,7 +13,7 @@
 |--------------------|------------|------|------|--------------------------------------|
 | id                 | int        | ○    | ○    | 評価ID（主キー）                     |
 | class_id           | int        | ○    |      | 評価対象クラスID（master_classes.id, 2桁:10〜99） |
-| table_id    | int        | ○    |      | 評価対象テーブルID（master_tables.id, 4桁:1000〜9999） |
+| table_id           | int        | ○    |      | 評価対象テーブルID（master_tables.id, 4桁:1000〜9999） |
 | target_id          | int        | ○    |      | 評価対象ID                           |
 | user_id            | int        | ○    |      | 評価者ID（外部キー）                 |
 | evaluation_type    | tinyint    | ○    |      | 評価種別                             |
