@@ -8,8 +8,8 @@
 
 ## ディレクトリ構成
 
-- frontend/ ・・・ フロントエンド（Vue.js）
-- backend/   ・・・ バックエンド（Django）
+- frontend/ ・・・ フロントエンド（Vue.js 3 + TypeScript, Vuetify 3, Pinia, Vue Router 4, Axios, Vite）
+- backend/   ・・・ バックエンド（Python 3.11, Django 4, Django REST Framework, JWT, Django Admin, Celery + Redis）
 - docker/    ・・・ Docker関連設定
 - config/    ・・・ DB初期化SQL等
 

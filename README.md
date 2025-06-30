@@ -22,15 +22,20 @@
 - Python 3.11
 - Django 4
 - Django REST Framework
-- Celery + Redis (タスクキュー・キャッシュ)
+- Django REST Framework JWT (認証)
+- Django Admin (管理画面)
+- Celery + Redis (タスクキュー/キャッシュ)
 
 ### データベース
 - PostgreSQL 15
+- PostgreSQL Full-Text Search
+- JSONB
 
 ### インフラ・運用
 - Docker + Docker Compose
-- AWS (ECS, RDS, S3, CloudFront)
-- GitHub Actions (CI/CD)
+- AWS (ECS, RDS, S3, CloudFront, CloudWatch)
+- GitHub Actions
+- Git + GitHub
 
 ## プロジェクト構造
 
