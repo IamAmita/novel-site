@@ -12,8 +12,10 @@
 | 属性名        | 型            | 必須 | 一意 | 説明                           |
 |---------------|---------------|------|------|--------------------------------|
 | id            | int           | ○    | ○    | 設定ID（主キー）               |
-| category_id   | int           | ○    |      | カテゴリID（world_categories.idを参照） |
+| parent_id     | int           | ○    |      | 世界カテゴリID（world_categories.idを参照、NOT NULL） |
+| category_id   | int           |      |      | カテゴリID（世界のカテゴリ自体の設定を記述する際に用いる。NULL可、用途に応じて利用） |
 | title         | varchar(255)  | ○    |      | 設定タイトル                   |
+| description   | text          |      |      | 設定の説明                     |
 | delete_flg    | tinyint(1)    | ○    |      | 削除フラグ（0:有効, 1:削除済み） |
 | created_at    | datetime      | ○    |      | 作成日時                       |
 | updated_at    | datetime      | ○    |      | 更新日時                       |
@@ -26,6 +28,7 @@
 | インデックス名           | 種類 | 説明               | カラム                |
 |------------------------|------|-------------------|----------------------|
 | PRIMARY KEY            | 主キー | 設定IDの主キー     | id                   |
+| INDEX                  | 通常 | 世界カテゴリ検索用 | parent_id            |
 | INDEX                  | 通常 | カテゴリ検索用     | category_id          |
 | INDEX                  | 通常 | タイトル検索用     | title                |
 | INDEX                  | 通常 | 削除フラグ検索用   | delete_flg           |
@@ -33,6 +36,7 @@
 | INDEX                  | 通常 | 更新日時検索用     | updated_at           |
 | INDEX                  | 通常 | 削除日時検索用     | deleted_at           |
 | FULLTEXT               | 全文検索 | タイトルの全文検索用 | title |
+| UNIQUE                 | 複合一意 | 世界カテゴリID・タイトルの組み合わせ一意 | parent_id, title |
 
 ---
 
@@ -42,11 +46,16 @@
 - `id`: 自動採番（AUTO_INCREMENT）
 
 ### 外部キー制約
-- `category_id` → `world_categories.id`
+- `parent_id` → `world_categories.id`（NOT NULL）
+- `category_id` → `world_categories.id`（NULL可）
 
 ### チェック制約
 - `title`: 空文字列でないこと
 - `delete_flg` IN (0, 1)
+- `category_id`: NULL可（任意）
+
+### 一意制約
+- `parent_id`, `title`の組み合わせは一意
 
 ---
 
@@ -75,6 +84,10 @@
 - `delete_flg`で論理削除を実現
 - `deleted_at`で削除日時を記録
 - 削除された設定は通常の検索から除外
+
+### `category_id`の説明
+- `category_id`は、世界のカテゴリ自体の設定情報（例：カテゴリの説明や属性など）を記述する際に用いるカラムです。
+- `category_id`が設定されている場合、`title`は必ず対応するカテゴリ名（categories.name）と一致しなければなりません。この制約はDBレベルでは実現できないため、サーバーサイド（アプリケーション側）でバリデーションを行ってください。
 
 ---
 
