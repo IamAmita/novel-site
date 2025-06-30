@@ -18,7 +18,7 @@
 | created_at       | datetime| ○    |      | ステータス変更日時                   |
 | updated_at       | datetime| ○    |      | 更新日時                             |
 | deleted_at       | datetime|      |      | 削除日時                             |
-| is_deleted       | tinyint | ○    |      | 削除フラグ（0：有効、1：削除済み、デフォルト：0） |
+| delete_flg       | tinyint | ○    |      | 削除フラグ（0：有効、1：削除済み、デフォルト：0） |
 
 ---
 
@@ -32,7 +32,7 @@
 | INDEX          | 複合   | 現在のステータス検索用 | user_id, created_at |
 | INDEX          | 通常   | ステータス検索用       | status_id        |
 | INDEX          | 通常   | 変更日時検索用         | created_at       |
-| INDEX          | 通常   | 削除フラグ検索用       | is_deleted       |
+| INDEX          | 通常   | 削除フラグ検索用       | delete_flg       |
 
 ---
 
@@ -51,7 +51,7 @@
 ### チェック制約
 - `status_id`: ユーザー用ステータス定義ID（401〜404）のみ許可
 - `status_value`: 1〜255の範囲の数値のみ許可
-- `is_deleted`: 0（有効）または1（削除済み）のみ許可、デフォルト値は0
+- `delete_flg`: 0（有効）または1（削除済み）のみ許可、デフォルト値は0
 
 ---
 
@@ -80,8 +80,8 @@
 ### 論理削除
 - 論理削除により、参照整合性を保ちながらデータの履歴を保持
 - 削除されたレコードは通常の検索から除外
-- is_deleted = 0：有効なレコード
-- is_deleted = 1：削除済みレコード
+- delete_flg = 0：有効なレコード
+- delete_flg = 1：削除済みレコード
 
 ---
 
@@ -98,7 +98,7 @@
 ---
 
 ## 運用例
-| id | user_id | status_id | status_value | created_at          | is_deleted |
+| id | user_id | status_id | status_value | created_at          | delete_flg |
 |----|---------|-----------|-------------|---------------------|------------|
 | 1  | 1001    | 401       | 1           | 2024-06-10 12:00:00 | 0          |
 | 2  | 1001    | 402       | 2           | 2024-06-15 14:30:00 | 0          |

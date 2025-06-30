@@ -13,7 +13,7 @@
 |---------------|---------------|------|------|--------------------------------|
 | id            | int           | ○    | ○    | 世界ID（主キー）               |
 | user_id       | int           | ○    |      | 作成者ユーザーID（users.id）   |
-| is_published  | tinyint(1)    | ○    |      | 公開フラグ（0:非公開, 1:公開） |
+| publish_flg   | tinyint(1)    | ○    |      | 公開フラグ（0:非公開, 1:公開） |
 | delete_flg    | tinyint(1)    | ○    |      | 削除フラグ（0:有効, 1:削除済み） |
 | created_at    | datetime      | ○    |      | 作成日時                       |
 | updated_at    | datetime      | ○    |      | 更新日時                       |
@@ -27,12 +27,12 @@
 |------------------------|------|-------------------|----------------------|
 | PRIMARY KEY            | 主キー | 世界IDの主キー     | id                   |
 | INDEX                  | 通常 | 作成者検索用       | user_id              |
-| INDEX                  | 通常 | 公開状態検索用     | is_published         |
+| INDEX                  | 通常 | 公開状態検索用     | publish_flg          |
 | INDEX                  | 通常 | 削除フラグ検索用   | delete_flg           |
 | INDEX                  | 通常 | 作成日時検索用     | created_at           |
 | INDEX                  | 通常 | 更新日時検索用     | updated_at           |
 | INDEX                  | 通常 | 削除日時検索用     | deleted_at           |
-| INDEX                  | 複合 | ユーザー・公開状態検索用 | user_id, is_published |
+| INDEX                  | 複合 | ユーザー・公開状態検索用 | user_id, publish_flg |
 | INDEX                  | 複合 | ユーザー・削除フラグ検索用 | user_id, delete_flg |
 
 ---
@@ -46,7 +46,7 @@
 - `user_id` → `users.id`
 
 ### チェック制約
-- `is_published` IN (0, 1)
+- `publish_flg` IN (0, 1)
 - `delete_flg` IN (0, 1)
 
 ---

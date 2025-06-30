@@ -14,7 +14,7 @@
 | target_id      | int        | ○    |      | レビュー対象ID                       |
 | rating         | tinyint    | ○    |      | 評価点（1-5段階）                    |
 | body           | text       |      |      | レビュー本文                         |
-| is_deleted     | tinyint    | ○    |      | 通報による自動削除フラグ             |
+| delete_flg     | tinyint    | ○    |      | 通報による自動削除フラグ             |
 | created_at     | datetime   | ○    |      | 投稿日時                             |
 | updated_at     | datetime   |      |      | 更新日時                             |
 
@@ -27,7 +27,7 @@
 | INDEX | 複合 | 対象別評価検索用 | class_id, table_id, target_id, rating |
 | INDEX | 複合 | 対象別時系列検索用 | class_id, table_id, target_id, created_at |
 | INDEX | 複合 | ユーザー別レビュー履歴用 | user_id, created_at |
-| INDEX | 通常 | 削除状態検索用 | is_deleted |
+| INDEX | 通常 | 削除状態検索用 | delete_flg |
 
 ## 制約条件
 
@@ -46,7 +46,7 @@
 - `rating`: 1以上5以下の値のみ許可
 - `class_id`: 10〜99のいずれかである必要があります
 - `table_id`: 1000〜9999のいずれかである必要があります
-- `is_deleted`: 0または1の値のみ許可
+- `delete_flg`: 0または1の値のみ許可
 
 ## 設計補足
 
@@ -60,7 +60,7 @@
 
 ## 運用上の注意点
 
-1. **論理削除**: is_deleted=1で削除済み、0で有効。全テーブルで統一。
+1. **論理削除**: delete_flg=1で削除済み、0で有効。全テーブルで統一。
 2. **重複レビュー防止**: 1ユーザーにつき1対象に1つのレビューのみ許可
 3. **評価点制限**: 1-5段階の評価点のみ許可
 4. **通報処理**: バッチ処理で通報数を集計し自動削除

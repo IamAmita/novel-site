@@ -18,7 +18,7 @@
 | created_at       | datetime| ○    |      | ステータス変更日時                   |
 | updated_at       | datetime| ○    |      | 更新日時                             |
 | deleted_at       | datetime|      |      | 削除日時                             |
-| is_deleted       | tinyint | ○    |      | 削除フラグ（0：有効、1：削除済み、デフォルト：0） |
+| delete_flg       | tinyint | ○    |      | 削除フラグ（0：有効、1：削除済み、デフォルト：0） |
 
 ---
 
@@ -33,7 +33,7 @@
 | INDEX          | 通常   | ステータス検索用       | status_id        |
 | INDEX          | 複合   | ユーザー別ステータス検索用 | notification_id, status_id |
 | INDEX          | 通常   | 変更日時検索用         | created_at       |
-| INDEX          | 通常   | 削除フラグ検索用       | is_deleted       |
+| INDEX          | 通常   | 削除フラグ検索用       | delete_flg       |
 
 ---
 
@@ -52,7 +52,7 @@
 ### チェック制約
 - `status_id`: 通知用ステータス定義ID（301〜304）のみ許可
 - `status_value`: 1〜255の範囲の数値のみ許可
-- `is_deleted`: 0（有効）または1（削除済み）のみ許可、デフォルト値は0
+- `delete_flg`: 0（有効）または1（削除済み）のみ許可、デフォルト値は0
 
 ---
 
@@ -82,8 +82,8 @@
 ### 論理削除
 - 論理削除により、参照整合性を保ちながらデータの履歴を保持
 - 削除されたレコードは通常の検索から除外
-- is_deleted = 0：有効なレコード
-- is_deleted = 1：削除済みレコード
+- delete_flg = 0：有効なレコード
+- delete_flg = 1：削除済みレコード
 
 ---
 
@@ -100,7 +100,7 @@
 ---
 
 ## 運用例
-| id | notification_id | status_id | status_value | created_at          | is_deleted |
+| id | notification_id | status_id | status_value | created_at          | delete_flg |
 |----|----------------|-----------|-------------|---------------------|------------|
 | 1  | 3001           | 301       | 1           | 2024-06-10 12:00:00 | 0          |
 | 2  | 3001           | 303       | 3           | 2024-06-10 12:00:00 | 0          |
@@ -159,10 +159,10 @@
 ```sql
 SELECT n.* FROM notifications n
 JOIN notification_statuses ns ON n.id = ns.notification_id
-WHERE ns.status_id = 301 AND ns.is_deleted = 0
+WHERE ns.status_id = 301 AND ns.delete_flg = 0
 AND ns.created_at = (
     SELECT MAX(created_at) FROM notification_statuses 
-    WHERE notification_id = n.id AND status_id = 301 AND is_deleted = 0
+    WHERE notification_id = n.id AND status_id = 301 AND delete_flg = 0
 );
 ```
 
@@ -170,10 +170,10 @@ AND ns.created_at = (
 ```sql
 SELECT n.* FROM notifications n
 JOIN notification_statuses ns ON n.id = ns.notification_id
-WHERE ns.status_id = 303 AND ns.is_deleted = 0
+WHERE ns.status_id = 303 AND ns.delete_flg = 0
 AND ns.created_at = (
     SELECT MAX(created_at) FROM notification_statuses 
-    WHERE notification_id = n.id AND status_id = 303 AND is_deleted = 0
+    WHERE notification_id = n.id AND status_id = 303 AND delete_flg = 0
 );
 ```
 
@@ -181,9 +181,9 @@ AND ns.created_at = (
 ```sql
 SELECT n.* FROM notifications n
 JOIN notification_statuses ns ON n.id = ns.notification_id
-WHERE ns.status_id = 304 AND ns.is_deleted = 0
+WHERE ns.status_id = 304 AND ns.delete_flg = 0
 AND ns.created_at = (
     SELECT MAX(created_at) FROM notification_statuses 
-    WHERE notification_id = n.id AND status_id = 304 AND is_deleted = 0
+    WHERE notification_id = n.id AND status_id = 304 AND delete_flg = 0
 );
 ``` 
