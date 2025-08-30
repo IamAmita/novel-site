@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  # Laravel アプリケーション
+  novel-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: novel-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "5173:5173"  # Vite dev server
+    volumes:
+      - ../novel-site:/var/www/html
+      - ./storage:/var/www/html/storage
+      - ./logs:/var/log
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_HOST=mysql
+      - DB_DATABASE=novel_site
+      - DB_USERNAME=novel_user
+      - DB_PASSWORD=novel_pass
+      - REDIS_HOST=redis
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - novel-network
+
+  # MySQL データベース
+  mysql:
+    image: mysql:8.0
+    container_name: novel-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: novel_site
+      MYSQL_USER: novel_user
+      MYSQL_PASSWORD: novel_pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - novel-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+
+  # Redis キャッシュ・セッション・キュー
+  redis:
+    image: redis:7-alpine
+    container_name: novel-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - novel-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+
+  # Elasticsearch 検索エンジン
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: novel-elasticsearch
+    restart: unless-stopped
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - novel-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      timeout: 30s
+      retries: 5
+      interval: 30s
+      start_period: 60s
+
+networks:
+  novel-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  elasticsearch_data:
+    driver: local

@@ -1,80 +1,124 @@
-# 小説投稿サイト
+# 小説投稿サイト - 5言語学習プロジェクト
 
-設定管理・共同著作対応の小説投稿サイトです。
+同一仕様の小説投稿サイトを5つの異なる言語で実装し、各言語の特徴と適用領域を実体験する学習プロジェクト。
 
-## プロジェクト概要
+## 🎯 プロジェクト概要
 
-- **目的**: 設定管理機能の充実した小説投稿サイトの構築
-- **特徴**: 共同作成・依頼機能による創作コミュニティの形成
-- **開発方針**: 品質重視、納期制限なし、継続的改善
+- **目標**: 技術比較と学習効果の最大化
+- **対象言語**: PHP、Python、TypeScript、Java、Go
+- **アーキテクチャ**: モノレポ構成による統一管理
 
-## 技術スタック
-
-### フロントエンド
-- Vue.js 3 + TypeScript
-- Vuetify 3 (UIフレームワーク)
-- Pinia (状態管理)
-- Vue Router 4 (ルーティング)
-- Axios (HTTP通信)
-- Vite (ビルドツール)
-
-### バックエンド
-- Python 3.11
-- Django 4
-- Django REST Framework
-- Django REST Framework JWT (認証)
-- Django Admin (管理画面)
-- Celery + Redis (タスクキュー/キャッシュ)
-
-### データベース
-- PostgreSQL 15
-- PostgreSQL Full-Text Search
-- JSONB
-
-### インフラ・運用
-- Docker + Docker Compose
-- AWS (ECS, RDS, S3, CloudFront, CloudWatch)
-- GitHub Actions
-- Git + GitHub
-
-## プロジェクト構造
+## 📁 ディレクトリ構造
 
 ```
-app/
-├── frontend/          # Vue.jsフロントエンド
-├── backend/           # Djangoバックエンド
-├── docker/            # Docker設定ファイル
-├── docs/              # ドキュメント
-├── config/            # 設定ファイル
-└── README.md          # このファイル
+novel-site/
+├── README.md                    # このファイル
+├── docs/                        # 共通設計・ドキュメント
+│   ├── 要件定義/
+│   ├── 基本設計/
+│   └── 技術比較/
+├── shared/                      # 共通リソース
+│   ├── database/               # DB設計・初期データ
+│   ├── api/                    # API仕様
+│   ├── docker/                 # 共通Docker設定
+│   └── assets/                 # 共通アセット
+├── implementations/             # 各言語実装
+│   ├── python-django/          # Python + Django版
+│   ├── typescript-nextjs/      # TypeScript + Next.js版
+│   ├── java-springboot/        # Java + Spring Boot版
+│   ├── go-gin/                 # Go + Gin版
+│   └── php-laravel/            # PHP + Laravel版
+└── tools/                      # 開発支援ツール
+    ├── benchmark/              # パフォーマンス測定
+    └── analysis/               # 比較分析
 ```
 
-## 開発環境の構築
+## 🚀 各実装バージョン
 
-### 前提条件
-- Docker Desktop
+| 言語 | フレームワーク | データベース | 状況 |
+|------|----------------|--------------|------|
+| Python | Django 4 | 未選定 | ⏳ 技術スタック定義予定 |
+| TypeScript | Next.js 14 | 未選定 | ⏳ 技術スタック定義予定 |
+| Java | Spring Boot 3 | 未選定 | ⏳ 技術スタック定義予定 |
+| Go | Gin | 未選定 | ⏳ 技術スタック定義予定 |
+| PHP | Laravel 10 | 未選定 | ⏳ 技術スタック定義予定 |
+
+※ データベースは各技術スタック定義時に、言語・フレームワークの特性に最適なものを選定
+
+## 🛠️ 開発環境
+
+### 必要なツール
+- Docker & Docker Compose
 - Git
-- Cursor (VSCodeベースのIDE推奨)
+- 各言語の開発環境（実装時に設定）
 
-### セットアップ手順
-1. リポジトリのクローン
-2. Docker環境の構築
-3. 開発サーバーの起動
+### クイックスタート
+```bash
+# リポジトリクローン
+git clone <repository-url>
+cd novel-site
 
-詳細は各ディレクトリのREADMEを参照してください。
+# 共通環境確認
+cd shared/docker
+docker-compose up -d
 
-## 開発方針
+# 各実装の起動方法は implementations/{language}/ の README を参照
+```
 
-- **品質重視**: 納期よりも満足度（品質）を重視
-- **段階的開発**: フェーズ分けによる段階的実装
-- **実装しながら学習**: 実際の開発を通じて技術を習得
-- **継続的改善**: 運用開始後も継続的な機能改善
+## 📊 学習・比較観点
 
-## ライセンス
+### 技術比較軸
+- **開発効率**: 実装速度、学習コスト、デバッグ容易性
+- **パフォーマンス**: レスポンス時間、メモリ使用量、並行処理
+- **保守性**: コード可読性、テスト容易性、リファクタリング
+- **エコシステム**: ライブラリ充実度、コミュニティ、将来性
 
-このプロジェクトは個人開発の学習目的で作成されています。
+### 成果物
+- 各言語での完全動作するWebアプリケーション
+- 実体験に基づく技術比較ブログ記事
+- パフォーマンス測定結果・ベンチマーク
+- 学習記録・開発日誌
+
+## 📚 ドキュメント
+
+### メインドキュメント
+- [プロジェクト概要](docs/project/概要.md)
+- [技術選定方針](docs/project/技術選定方針.md)
+- [システム構成](docs/architecture/システム構成.md)
+- [データベース設計](docs/architecture/データベース設計.md)
+- [機能仕様](docs/specifications/機能仕様.md)
+
+### 詳細資料（アーカイブ）
+- [要件定義書](docs/archive/要件定義/要件定義書.md)
+- [機能要件定義書](docs/archive/要件定義/機能要件定義書.md)
+- [詳細DB設計](docs/archive/基本設計/DB設計/)
+- [詳細API設計](docs/archive/基本設計/API設計/)
+
+## 🎓 学習進捗
+
+### Phase 1: Python版（基盤構築）
+- [x] 要件定義・基本設計
+- [x] プロジェクト構造整理
+- [ ] 技術スタック詳細定義
+- [ ] データベース選定・設計
+- [ ] 実装・基本機能完成
+
+### Phase 2-5: 他言語版
+- [ ] TypeScript版
+- [ ] Java版  
+- [ ] Go版
+- [ ] PHP版
+
+## 🤝 貢献
+
+このプロジェクトは個人学習目的ですが、フィードバックや提案は歓迎します。
+
+## 📄 ライセンス
+
+MIT License
 
 ---
 
-**作成日**: 2025年1月
-**開発者**: 個人開発
+**作成者**: 開発者  
+**開始日**: 2025年1月  
+**最終更新**: 2025年1月
