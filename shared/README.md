@@ -6,54 +6,79 @@
 
 ```
 shared/
-├── database/           # データベース関連
-│   ├── init.sql       # 初期化スクリプト
-│   ├── schema.sql     # スキーマ定義
-│   ├── seed.sql       # サンプルデータ
-│   └── migrations/    # マイグレーションファイル
-├── api/               # API仕様
-│   ├── openapi.yaml   # OpenAPI 3.0仕様
-│   ├── endpoints/     # エンドポイント詳細
-│   └── examples/      # リクエスト・レスポンス例
-├── docker/            # Docker設定
-│   ├── docker-compose.yml        # 共通サービス
-│   ├── docker-compose.dev.yml    # 開発環境
-│   ├── postgres/      # PostgreSQL設定
-│   └── redis/         # Redis設定
-└── assets/            # 共通アセット
-    ├── images/        # 画像ファイル
-    ├── docs/          # ドキュメント用画像
-    └── samples/       # サンプルファイル
+├── business/           # ビジネス要件（技術非依存）
+│   ├── user-stories.md      # ユーザーストーリー
+│   ├── business-rules.md    # ビジネスルール
+│   ├── functional-scope.md  # 機能範囲定義
+│   └── workflow-definitions.md # 業務フロー
+├── domain/            # ドメイン概念（技術非依存）
+│   ├── core-entities.md     # コアエンティティ概念
+│   ├── entity-relationships.md # エンティティ関係
+│   ├── business-constraints.md # ビジネス制約
+│   └── domain-rules.md      # ドメインルール
+├── design/            # UI/UXコンセプト（技術非依存）
+│   ├── user-experience-flow.md # UX フロー
+│   ├── screen-concepts.md   # 画面コンセプト
+│   ├── design-principles.md # デザイン原則
+│   └── accessibility-rules.md # アクセシビリティ
+├── assets/            # 共通アセット
+│   ├── images/        # ロゴ・アイコン・UI画像
+│   ├── legal/         # 利用規約・プライバシーポリシー
+│   └── samples/       # サンプルデータ・小説
+└── quality/           # 品質要件（技術非依存）
+    ├── performance-requirements.md # パフォーマンス要件
+    ├── security-requirements.md    # セキュリティ要件
+    └── testing-guidelines.md       # テスト指針
+```
+
+**重要**: API設計・データベース設計・Docker設定は各実装で独自管理
 ```
 
 ## 🎯 使用目的
 
-### database/
-- 全実装で共通のデータベーススキーマ
-- 統一されたサンプルデータ
-- 各言語でのマイグレーション基準
+### business/（ビジネス要件）
+- 全実装で共通の「何を作るか」を定義
+- ユーザーストーリー・ビジネスルール
+- 技術に依存しない機能要件
 
-### api/
-- 全実装で統一されたAPI仕様
-- エンドポイント・レスポンス形式の標準化
-- 各言語実装での参照基準
+### domain/（ドメイン概念）
+- コアエンティティの概念定義
+- エンティティ間の関係性
+- ビジネス制約・ドメインルール
 
-### docker/
-- PostgreSQL、Redis等の共通サービス
-- 開発環境の統一
-- 各実装での共通インフラ
+### design/（UI/UXコンセプト）
+- ユーザー体験の基本コンセプト
+- 画面構成・デザイン原則
+- アクセシビリティ要件
 
-### assets/
-- UI/UX用の共通画像・アイコン
-- ドキュメント用の図表
-- サンプルファイル（小説、設定等）
+### assets/（共通アセット）
+- ロゴ・アイコン・UI素材
+- 法的文書（利用規約等）
+- サンプルデータ・小説
+
+### quality/（品質要件）
+- パフォーマンス・セキュリティ要件
+- テスト指針・品質基準
+- 技術に依存しない非機能要件
+
+**注意**: 以下は各実装で独自管理
+- API設計・エンドポイント構造
+- データベース設計・スキーマ
+- Docker設定・インフラ構成
 
 ## 🔧 使用方法
 
-### データベース起動
+### ⚠️ Docker環境について（重要な変更）
+**新方針**: 各実装が独立したDocker環境を持つため、shared/dockerは参考用のみ
+
 ```bash
+# ❌ 旧方式（非推奨）
 cd shared/docker
-docker-compose up -d postgres redis
+docker-compose up -d
+
+# ✅ 新方式（推奨）
+cd implementations/{language}/
+docker-compose up -d  # 各実装で独立起動
 ```
 
 ### API仕様確認
