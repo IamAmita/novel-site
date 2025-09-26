@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# Laravel Sail互換のコンテナ起動スクリプト
+# Novel Site用にカスタマイズ
+
+if [ ! -z "$WWWUSER" ]; then
+    usermod -u $WWWUSER sail
+fi
+
+if [ ! -z "$WWWGROUP" ]; then
+    groupmod -g $WWWGROUP sail
+fi
+
+if [ ! -d /.composer ]; then
+    mkdir /.composer
+fi
+
+chmod -R ugo+rw /.composer
+
+# PHP設定の調整
+echo "memory_limit=512M" >> /etc/php/8.4/cli/conf.d/99-sail.ini
+echo "max_execution_time=120" >> /etc/php/8.4/cli/conf.d/99-sail.ini
+echo "upload_max_filesize=10M" >> /etc/php/8.4/cli/conf.d/99-sail.ini
+echo "post_max_size=10M" >> /etc/php/8.4/cli/conf.d/99-sail.ini
+
+# ファイル権限の設定
+if [ -d "/var/www/html" ]; then
+    chown -R sail:sail /var/www/html
+    chmod -R 755 /var/www/html
+fi
+
+# ストレージディレクトリの権限設定
+if [ -d "/var/www/html/storage" ]; then
+    chmod -R 775 /var/www/html/storage
+fi
+
+if [ -d "/var/www/html/bootstrap/cache" ]; then
+    chmod -R 775 /var/www/html/bootstrap/cache
+fi
+
+# Laravel アプリケーションサーバー起動
+if [ "$1" != "" ]; then
+    exec gosu $WWWUSER "$@"
+else
+    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+fi

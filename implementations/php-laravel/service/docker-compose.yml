@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+    # Laravel Application
+    laravel.test:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: novel-site-laravel
+        ports:
+            - '${APP_PORT:-80}:80'
+        environment:
+            WWWUSER: '${WWWUSER:-1000}'
+            WWWGROUP: '${WWWGROUP:-1000}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - novel-site
+        depends_on:
+            - mysql
+            - redis
+            - elasticsearch
+
+    # MySQL Database
+    mysql:
+        image: 'mysql/mysql-server:8.0'
+        container_name: novel-site-mysql
+        ports:
+            - '${FORWARD_DB_PORT:-3306}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD:-password}'
+            MYSQL_ROOT_HOST: "%"
+            MYSQL_DATABASE: '${DB_DATABASE:-novel_site}'
+            MYSQL_USER: '${DB_USERNAME:-sail}'
+            MYSQL_PASSWORD: '${DB_PASSWORD:-password}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        volumes:
+            - 'novel-site-mysql:/var/lib/mysql'
+            - './service/mysql/init:/docker-entrypoint-initdb.d'
+        networks:
+            - novel-site
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD:-password}"]
+            retries: 3
+            timeout: 5s
+
+    # Redis Cache/Session/Queue
+    redis:
+        image: 'redis:alpine'
+        container_name: novel-site-redis
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            - 'novel-site-redis:/data'
+        networks:
+            - novel-site
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            retries: 3
+            timeout: 5s
+
+    # Elasticsearch Search Engine
+    elasticsearch:
+        image: 'elasticsearch:8.11.0'
+        container_name: novel-site-elasticsearch
+        ports:
+            - '${FORWARD_ES_PORT:-9200}:9200'
+            - '${FORWARD_ES_CLUSTER_PORT:-9300}:9300'
+        environment:
+            - node.name=novel-site-es
+            - cluster.name=novel-site-cluster
+            - discovery.type=single-node
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - xpack.security.enabled=false
+            - xpack.security.enrollment.enabled=false
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - 'novel-site-elasticsearch:/usr/share/elasticsearch/data'
+            - './service/elasticsearch/config:/usr/share/elasticsearch/config'
+        networks:
+            - novel-site
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+            retries: 5
+            timeout: 10s
+
+networks:
+    novel-site:
+        driver: bridge
+
+volumes:
+    novel-site-mysql:
+        driver: local
+    novel-site-redis:
+        driver: local
+    novel-site-elasticsearch:
+        driver: local

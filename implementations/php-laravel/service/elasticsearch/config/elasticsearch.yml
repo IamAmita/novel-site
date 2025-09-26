@@ -1,0 +1,45 @@
+# Elasticsearch 8.11.0 設定ファイル
+# Novel Site 小説検索用設定
+
+# クラスター設定
+cluster.name: "novel-site-cluster"
+node.name: "novel-site-es"
+
+# ネットワーク設定
+network.host: 0.0.0.0
+http.port: 9200
+transport.port: 9300
+
+# ディスカバリー設定 (単一ノード)
+discovery.type: single-node
+
+# セキュリティ設定 (ローカル開発用で無効化)
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+xpack.security.http.ssl.enabled: false
+xpack.security.transport.ssl.enabled: false
+
+# ログ設定
+logger.level: INFO
+
+# JVM設定
+bootstrap.memory_lock: true
+
+# インデックス設定
+action.auto_create_index: true
+
+# 日本語検索用プラグイン設定のヒント
+# analysis-kuromoji プラグインを有効にする場合は以下をコメントアウト
+# index.analysis.analyzer.default.type: kuromoji
+
+# パフォーマンス設定
+indices.memory.index_buffer_size: 20%
+indices.memory.min_shard_index_buffer_size: 12mb
+
+# 小説コンテンツ用設定
+indices.query.bool.max_clause_count: 10000
+
+# クラスターヘルス確認間隔
+cluster.routing.allocation.disk.threshold_enabled: true
+cluster.routing.allocation.disk.watermark.low: 85%
+cluster.routing.allocation.disk.watermark.high: 90%
