@@ -143,6 +143,10 @@ POST /api/v1/auth/login
 | DELETE | `/api/v1/users/{id}/follow/` | 必要 | フォロー解除 |
 | GET | `/api/v1/users/{id}/followers/` | 不要 | フォロワー一覧 |
 | GET | `/api/v1/users/{id}/followings/` | 不要 | フォロー中一覧 |
+| POST | `/api/v1/author-requests/` | 必要（読者） | 作者権限申請（F-108） |
+| GET | `/api/v1/author-requests/` | 必要（管理者） | 作者権限申請一覧（管理者用） |
+| PUT | `/api/v1/author-requests/{id}/approve/` | 必要（管理者） | 作者権限申請を承認 |
+| PUT | `/api/v1/author-requests/{id}/reject/` | 必要（管理者） | 作者権限申請を却下 |
 
 ### 3.2 ユーザー詳細取得
 
@@ -282,6 +286,9 @@ Authorization: Bearer {access_token}
 | POST | `/api/v1/settings/{id}/fields/` | 必要（作者本人） | フィールド追加 |
 | PUT/PATCH | `/api/v1/setting-fields/{id}/` | 必要（作者本人） | フィールド更新 |
 | DELETE | `/api/v1/setting-fields/{id}/` | 必要（作者本人） | フィールド削除 |
+| GET | `/api/v1/settings/{id}/relations/` | 不要（公開のみ） | 設定間の関係一覧（F-304） |
+| POST | `/api/v1/settings/{id}/relations/` | 必要（作者本人） | 設定間の関係を追加 |
+| DELETE | `/api/v1/setting-relations/{id}/` | 必要（作者本人） | 設定間の関係を削除 |
 
 ---
 
