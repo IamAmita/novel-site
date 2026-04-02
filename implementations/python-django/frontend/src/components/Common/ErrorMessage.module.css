@@ -1,0 +1,14 @@
+.error {
+  background-color: #fdf0f0;
+  border: 1px solid #f5c6c6;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  color: #c0392b;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}

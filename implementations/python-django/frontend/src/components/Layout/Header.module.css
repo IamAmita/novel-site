@@ -1,0 +1,229 @@
+.header {
+  background-color: #1a1a2e;
+  color: #f8f7f4;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.logo {
+  text-decoration: none;
+  color: #f8f7f4;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.logo span {
+  color: #7fa8f0;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.navLink {
+  color: #c8c8d8;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  transition: background-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #f8f7f4;
+}
+
+.navLinkActive {
+  color: #7fa8f0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.postButton {
+  background-color: #3d6ad6;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s;
+}
+
+.postButton:hover {
+  background-color: #2d57c0;
+}
+
+.notificationButton {
+  position: relative;
+  background: none;
+  border: none;
+  color: #c8c8d8;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.notificationButton:hover {
+  color: #f8f7f4;
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #e05252;
+  color: #fff;
+  font-size: 0.6rem;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userMenu {
+  position: relative;
+}
+
+.userButton {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f8f7f4;
+  cursor: pointer;
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: border-color 0.15s;
+}
+
+.userButton:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #e0ddd6;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  min-width: 160px;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.dropdownLink {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: #2c2c2c;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.12s;
+}
+
+.dropdownLink:hover {
+  background-color: #f0ede6;
+}
+
+.dropdownDivider {
+  height: 1px;
+  background-color: #e0ddd6;
+  margin: 0.25rem 0;
+}
+
+.logoutButton {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background: none;
+  border: none;
+  color: #c0392b;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.12s;
+}
+
+.logoutButton:hover {
+  background-color: #fdf0f0;
+}
+
+.authLinks {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.loginLink {
+  color: #c8c8d8;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.loginLink:hover {
+  color: #f8f7f4;
+}
+
+.registerLink {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #f8f7f4;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  transition: border-color 0.15s;
+}
+
+.registerLink:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 640px) {
+  .nav {
+    display: none;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+}

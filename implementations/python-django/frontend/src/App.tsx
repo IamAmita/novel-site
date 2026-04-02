@@ -1,40 +1,70 @@
-import styles from './App.module.css'
+import { type ReactNode } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { useAuth } from './hooks/useAuth'
+import { Layout } from './components/Layout/Layout'
+import { LoadingSpinner } from './components/Common/LoadingSpinner'
+
+import { HomePage } from './pages/Home/HomePage'
+import { LoginPage } from './pages/Auth/LoginPage'
+import { RegisterPage } from './pages/Auth/RegisterPage'
+import { NovelDetailPage } from './pages/Novel/NovelDetailPage'
+import { EpisodeReadPage } from './pages/Novel/EpisodeReadPage'
+import { NovelCreatePage } from './pages/Novel/NovelCreatePage'
+import { NovelEditPage } from './pages/Novel/NovelEditPage'
+import { EpisodeCreatePage } from './pages/Novel/EpisodeCreatePage'
+import { EpisodeEditPage } from './pages/Novel/EpisodeEditPage'
+import { ProfilePage } from './pages/User/ProfilePage'
+import { EditProfilePage } from './pages/User/EditProfilePage'
+import { NotFoundPage } from './pages/NotFoundPage'
+
+function PrivateRoute({ children }: { children: ReactNode }) {
+  const { isAuthenticated, isLoading } = useAuth()
+  if (isLoading) return <LoadingSpinner />
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />
+}
+
+function AppRoutes() {
+  return (
+    <Layout>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
+        <Route path="/novels/create" element={
+          <PrivateRoute><NovelCreatePage /></PrivateRoute>
+        } />
+        <Route path="/novels/:id" element={<NovelDetailPage />} />
+        <Route path="/novels/:id/edit" element={
+          <PrivateRoute><NovelEditPage /></PrivateRoute>
+        } />
+        <Route path="/novels/:id/episodes/create" element={
+          <PrivateRoute><EpisodeCreatePage /></PrivateRoute>
+        } />
+        <Route path="/novels/:id/episodes/:episodeId" element={<EpisodeReadPage />} />
+        <Route path="/novels/:id/episodes/:episodeId/edit" element={
+          <PrivateRoute><EpisodeEditPage /></PrivateRoute>
+        } />
+
+        <Route path="/users/:id" element={<ProfilePage />} />
+        <Route path="/users/:id/edit" element={
+          <PrivateRoute><EditProfilePage /></PrivateRoute>
+        } />
+
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Layout>
+  )
+}
 
 function App() {
   return (
-    <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <h1 className={styles.siteName}>小説投稿サイト</h1>
-          <p className={styles.tagline}>あなたの物語を、世界へ。</p>
-        </div>
-      </header>
-
-      <main className={styles.main}>
-        <section className={styles.hero}>
-          <div className={styles.heroContent}>
-            <span className={styles.badge}>Python / Django 実装版</span>
-            <h2 className={styles.heroTitle}>準備中</h2>
-            <p className={styles.heroDescription}>
-              小説投稿サイトを現在開発中です。<br />
-              Django + React + PostgreSQL による実装です。
-            </p>
-            <div className={styles.techStack}>
-              <span className={styles.tech}>Python 3.11</span>
-              <span className={styles.tech}>Django 4</span>
-              <span className={styles.tech}>React 18</span>
-              <span className={styles.tech}>TypeScript</span>
-              <span className={styles.tech}>PostgreSQL 15</span>
-              <span className={styles.tech}>Redis</span>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer className={styles.footer}>
-        <p>小説投稿サイト — 学習プロジェクト</p>
-      </footer>
-    </div>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
   )
 }
 
