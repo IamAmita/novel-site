@@ -21,10 +21,10 @@
 
 ## 現行の正本ドキュメント
 
-- ドメイン設計: [docs/domain/core-entities.md](../../domain/core-entities.md)、[docs/domain/entity-relationships.md](../../domain/entity-relationships.md)
-- 機能スコープ: [docs/business/functional-scope.md](../../business/functional-scope.md)
 - Phase 1 方針: [docs/project/Phase1-確定メモ.md](../../project/Phase1-確定メモ.md)
-- システム構成・DB設計: [docs/architecture/](../../architecture/)
+- 決定事項リスト: [todo.md](../../../todo.md)
+
+> 2026-07-21: 詳細なドメイン設計・機能スコープ・アーキテクチャ設計ドキュメントは一旦すべて削除した。決定事項を詰めてから再作成する。
 
 ## 参考として使える部分
 

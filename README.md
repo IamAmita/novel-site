@@ -13,21 +13,17 @@
 ```
 novel-site/
 ├── README.md                    # このファイル
-├── todo.md                      # 進捗・次アクション
-├── docs/                        # プロジェクトドキュメント（正本）
+├── todo.md                      # 決定すべき事項のリスト・進捗
+├── docs/                        # プロジェクトドキュメント
 │   ├── project/                 # プロジェクト方針・意思決定記録
-│   ├── business/                # ビジネス要件（機能範囲・ユーザーストーリー・ルール）
-│   ├── domain/                  # ドメイン概念（エンティティ定義・関係図）
-│   ├── design/                  # UI/UXコンセプト
-│   ├── quality/                 # 品質要件
-│   ├── architecture/            # システム・DB設計
-│   ├── specifications/          # 機能仕様（索引）
 │   ├── assets/                  # 共通アセット（画像等）
 │   └── archive/                 # 過去の要件定義・基本設計資料（参照用）
 ├── implementations/
 │   └── python-django/           # Python + Django版 実装
 └── tools/                       # 開発支援ツール
 ```
+
+> 要件・設計ドキュメント（business/domain/design/quality/architecture/specifications）は 2026-07-21 に一旦削除した。[todo.md](todo.md) の決定事項を詰めてから再作成する。
 
 ## 🚀 実装状況
 
@@ -59,9 +55,7 @@ docker compose up --build
 - [プロジェクト概要](docs/project/概要.md)
 - [プロダクト定義](docs/project/プロダクト定義.md)
 - [Phase1-確定メモ](docs/project/Phase1-確定メモ.md)
-- [機能範囲定義](docs/business/functional-scope.md)
-- [システム構成](docs/architecture/システム構成.md)
-- [データベース設計](docs/architecture/データベース設計.md)
+- [todo.md（決定事項リスト）](todo.md)
 
 ### 詳細資料（アーカイブ）
 - [要件定義書](docs/archive/要件定義/要件定義書.md)
