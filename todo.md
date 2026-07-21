@@ -14,7 +14,7 @@
 - **Phase 1 に含めないこと**: 共同創作、一般公開、コメント・評価・通知・掲示板、タグ・カテゴリ、管理者機能（すべて Phase 2 以降）
 - **既存 python-django 実装**: 現状は Novel 中心モデル（読者・コメント・掲示板等を含む広範な機能）で、上記 Phase 1 方針と不整合。どこまで再利用し、どこから作り直すかは下記の決定事項に含む
 
-> 2026-07-21: 詳細な要件・エンティティ設計・アーキテクチャ設計ドキュメント（旧 `docs/business` `docs/domain` `docs/design` `docs/quality` `docs/architecture` `docs/specifications`）は一旦すべて削除した。以下の決定事項を詰めてから書き直す。
+> 2026-07-21: 詳細な要件・エンティティ設計・アーキテクチャ設計ドキュメント（旧 `docs/business` `docs/domain` `docs/design` `docs/quality` `docs/architecture` `docs/specifications`）は一旦すべて削除し、機能要件から順にしっかり整理し直した。[docs/business/functional-scope.md](docs/business/functional-scope.md) に A〜G すべての機能要件を整理済み。次はデータモデル・画面等の設計に進む。
 
 ---
 
@@ -22,66 +22,72 @@
 
 ### A. 全体方針の再確認
 
-- [ ] Phase 1 の対象ユーザーは作者のみで確定でよいか（読者向け機能は本当に一切不要か）
-- [ ] ドメイン構造「作者 → ペンネーム → World → Setting／作品 → 章 → 話」で過不足ないか
-- [ ] 既存 python-django 実装（Novel 中心・バックエンド7アプリ）をどこまで再利用するか。完全に作り直すか、段階的に置き換えるか
-- [ ] `communications` / `administration` アプリ（コメント・通知・掲示板・管理機能等）を Phase 1 の間どう扱うか（触らず残す／削除する）
+- [x] Phase 1 の対象ユーザーは作者のみで確定（読者向け機能は Phase 3 以降） → [functional-scope.md](docs/business/functional-scope.md)
+- [x] ドメイン構造「作者 → ペンネーム → World → Setting／作品 → 章 → 話」で確定
+- [ ] 既存 python-django 実装（Novel 中心・バックエンド7アプリ）をどこまで再利用するか。完全に作り直すか、段階的に置き換えるか（機能要件確定後に判断）
+- [ ] `communications` / `administration` アプリ（コメント・通知・掲示板・管理機能等）を Phase 1 の間どう扱うか（触らず残す／削除する。機能要件確定後に判断）
 
 ### B. ユーザー・ペンネーム管理
 
-- [ ] ペンネームは1ユーザーあたり何個まで作成できるか（上限なし／上限あり）
-- [ ] プロフィール項目の具体（表示名・アイコン・自己紹介以外に必要な項目はあるか）
-- [ ] アカウント削除時、配下のペンネーム・World・作品はどうなるか
+- [x] 機能要件を整理済み → [functional-scope.md](docs/business/functional-scope.md)
+- [x] ペンネームは上限なしで複数作成可能
+- [x] パスワードリセットはメール送信方式
+- [x] アカウント削除時、配下データは論理削除
+- [ ] プロフィール項目の細部（表示名・アイコン・自己紹介以外に必要な項目はあるか）は設計時に検討
 
 ### C. 世界観（World）
 
-- [ ] World の項目定義（名前・説明の文字数制限、その他必要な項目はあるか）
-- [ ] World に表紙画像等のビジュアル要素は必要か
-- [ ] World 名の重複を許容するか
-- [ ] World 削除時、配下の Setting・作品はどうなるか（連鎖削除／削除を禁止して先に整理させる）
+- [x] 機能要件を整理済み → [functional-scope.md](docs/business/functional-scope.md)
+- [x] 表紙画像あり
+- [x] World削除時は配下データを連鎖削除（論理削除）
+- [x] World名の重複は許容
+- [ ] World の項目の文字数制限等は設計時に検討
 
 ### D. 設定（Setting）
 
-- [ ] Setting は World に紐づく（World 内の全作品で共有）だけでよいか、それとも作品（Novel）単位で閉じた Setting も必要か
-- [ ] Setting に親子階層構造（例：「王国」の下に「首都」）は必要か
-- [ ] Setting 名の重複を許容するか
-- [ ] Setting 削除時、配下・関連要素（SettingField・関係性・執筆画面からの参照等）はどうなるか
-- [ ] SettingTemplate（設定の種類）の初期セットとして何を用意するか
-- [ ] SettingTemplate をユーザーは自由に追加・編集・削除できるか
-- [ ] SettingField（カスタム項目）の値はテキストのみか、数値・日付・画像・他Settingへの参照なども扱うか
-- [ ] 項目はテンプレートで型を固定するか、Setting ごとに自由に追加できるか（あるいは両方か）
-- [ ] Setting 間の関係性（例：「A の師匠は B」）に方向性を持たせるか
-- [ ] 関係性のラベル（「師匠」等の種類）はどう管理するか（自由入力／マスタ管理／両方）
-- [ ] 関係性は World をまたいでよいか
-- [ ] 関係性の視覚化（グラフ表示等）は Phase 1 に含めるか
+- [x] 機能要件を整理済み → [functional-scope.md](docs/business/functional-scope.md)
+- [x] Setting は World単位＋作品単位の両方
+- [x] 親子階層構造は必要
+- [x] Setting削除時は連鎖削除（論理削除）
+- [x] Setting名の重複は許容
+- [x] SettingTemplate初期セット5種、編集・削除も自由
+- [x] SettingFieldの値はテキスト＋他Settingへの参照
+- [x] 関係性は方向性あり、ラベルはマスタ管理（自由追加可）、World横断可
+- [x] 関係性の視覚化はPhase 1に含めない
+- [ ] SettingField の型拡張（数値・日付等）を将来的に検討するか、Phase1では見送りのままか（設計時に再確認）
 
 ### E. 作品・執筆（Novel / Chapter / Episode）
 
-- [ ] 章（Chapter）は必須の構造か、章を作らず話だけで作品を構成することも許すか
-- [ ] 本文・あらすじ等の文字数制限
-- [ ] 執筆画面から Setting を参照する具体的な方式（本文中のリンク記法／挿入UI／サイドパネル、またはこれらの組み合わせ）
-- [ ] 変更履歴・編集ログはどの粒度で記録するか（全文スナップショット／差分、対象は Setting だけか作品本文も含むか）
-- [ ] 表紙画像のアップロード仕様（形式・サイズ制限）
+- [x] 機能要件を整理済み → [functional-scope.md](docs/business/functional-scope.md)
+- [x] 章（Chapter）は任意
+- [x] 設定参照はリンク記法＋サイドパネル挿入の両方
+- [x] 変更履歴の対象はSetting＋作品本文、粒度は変更ログのみ
+- [ ] 本文・あらすじ等の文字数制限、表紙画像のアップロード仕様は設計時に検討
 
 ### F. 閲覧・検索
 
-- [ ] 自分向け閲覧画面の構成（設定一覧・作品一覧を分けるか、World単位でまとめるか等）
-- [ ] 検索対象・検索方式（部分一致／全文検索、対象フィールド）
-- [ ] World 検索は必要か
+- [x] 機能要件を整理済み → [functional-scope.md](docs/business/functional-scope.md)
+- [x] 閲覧画面は設定一覧・作品一覧を別メニューに分ける
+- [x] 検索方式は部分一致検索
+- [x] World検索は必要
 
 ### G. 非機能・運用
 
-- [ ] 同時接続数・パフォーマンス要件（個人利用前提で厳密な数値要件は不要か）
-- [ ] データのバックアップ・移行方針
-- [ ] テストコードの方針（どの粒度で書くか、いつから着手するか）
+- [x] 機能要件を整理済み → [functional-scope.md](docs/business/functional-scope.md)
+- [x] パフォーマンス要件は不要（個人利用前提）
+- [x] バックアップはDB定期バックアップ＋作品・設定単位のエクスポート機能
+- [x] テスト方針はテスト駆動
 
 ---
 
 ## 進め方
 
-1. 上記のカテゴリごとに合意を取る（一度に全部ではなく、優先度の高い領域から）
-2. 合意した内容を `docs/project/` 配下、または新設する要件・設計ドキュメントに記録する
-3. ドキュメントが固まった領域から実装に着手する
+**方針**: 機能要件（何ができる必要があるか）からしっかり整理する。データモデル・画面詳細などの設計レベルの決定は、機能要件が固まってから詰める。
+
+1. ~~機能要件を A→B→C→D→E→F→G の順でカテゴリごとに整理・合意する~~ — 完了（2026-07-21、[functional-scope.md](docs/business/functional-scope.md)）
+2. 残る実装戦略の論点（既存 python-django 実装の再利用方針、`communications`/`administration` アプリの扱い）を決定する
+3. 機能要件をもとにデータモデル（`docs/domain/` 新設）・画面（`docs/design/` 新設等）の設計を進める
+4. ドキュメントが固まった領域から実装に着手する
 
 ---
 
@@ -89,4 +95,5 @@
 
 - [Phase1-確定メモ.md](docs/project/Phase1-確定メモ.md)
 - [プロダクト定義.md](docs/project/プロダクト定義.md)
+- [functional-scope.md](docs/business/functional-scope.md)（機能要件、整理中）
 - [docs/archive/python-django-初期実装/](docs/archive/python-django-初期実装/)（旧 Novel 中心モデルの記録、参考程度）

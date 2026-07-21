@@ -2,13 +2,14 @@
 
 小説投稿サイト（Python/Django実装）のドキュメント管理。
 
-> **2026-07-21**: 要件・設計ドキュメント（business/domain/design/quality/architecture/specifications、要件インベントリ）を一旦すべて削除した。詳細を詰めすぎる前に、まず [todo.md](../todo.md) の決定事項リストで論点を洗い出し、合意してから書き直す方針。
+> **2026-07-21**: 要件・設計ドキュメント（business/domain/design/quality/architecture/specifications、要件インベントリ）を一旦すべて削除し、機能要件（`business/functional-scope.md`）から順にしっかり整理し直した。A〜G すべての機能要件整理が完了。次はデータモデル・画面等の設計に進む（[todo.md](../todo.md) 参照）。
 
 ## ディレクトリ構成
 
 ```
 docs/
 ├── project/          # プロジェクト方針・意思決定記録
+├── business/         # 機能要件（functional-scope.md、整理完了）
 ├── assets/           # 共通アセット（画像等）
 └── archive/          # 過去の要件定義・基本設計資料（参照用）
 ```
