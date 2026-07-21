@@ -47,12 +47,7 @@ python-django/
 # リポジトリルートから
 cd implementations/python-django
 
-# 共通サービス起動（PostgreSQL, Redis）
-cd ../../shared/docker
-docker-compose up -d
-
-# 開発環境起動
-cd ../../implementations/python-django
+# 開発環境起動（PostgreSQL, Redis, backend, frontend を一括起動）
 docker-compose up -d
 
 # または手動起動

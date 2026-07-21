@@ -13,16 +13,17 @@
 ```
 novel-site/
 ├── README.md                    # このファイル
-├── docs/                        # プロジェクトドキュメント
-│   ├── project/                 # プロジェクト概要・方針
-│   ├── architecture/            # システム・DB設計
-│   ├── specifications/          # 機能仕様
-│   └── archive/                 # 過去の要件定義・基本設計資料
-├── shared/                      # 技術非依存の共通仕様
-│   ├── business/                # ビジネス要件
-│   ├── domain/                  # ドメイン概念
+├── todo.md                      # 進捗・次アクション
+├── docs/                        # プロジェクトドキュメント（正本）
+│   ├── project/                 # プロジェクト方針・意思決定記録
+│   ├── business/                # ビジネス要件（機能範囲・ユーザーストーリー・ルール）
+│   ├── domain/                  # ドメイン概念（エンティティ定義・関係図）
 │   ├── design/                  # UI/UXコンセプト
-│   └── quality/                 # 品質要件
+│   ├── quality/                 # 品質要件
+│   ├── architecture/            # システム・DB設計
+│   ├── specifications/          # 機能仕様（索引）
+│   ├── assets/                  # 共通アセット（画像等）
+│   └── archive/                 # 過去の要件定義・基本設計資料（参照用）
 ├── implementations/
 │   └── python-django/           # Python + Django版 実装
 └── tools/                       # 開発支援ツール
@@ -58,7 +59,7 @@ docker compose up --build
 - [プロジェクト概要](docs/project/概要.md)
 - [プロダクト定義](docs/project/プロダクト定義.md)
 - [Phase1-確定メモ](docs/project/Phase1-確定メモ.md)
-- [機能範囲定義](shared/business/functional-scope.md)
+- [機能範囲定義](docs/business/functional-scope.md)
 - [システム構成](docs/architecture/システム構成.md)
 - [データベース設計](docs/architecture/データベース設計.md)
 
