@@ -202,9 +202,6 @@ build/
 # Docker
 .dockerignore
 
-# MySQL Docker data
-implementations/php-laravel/container/db/data/
-
 # Temporary files
 *.tmp
 *.temp 

@@ -172,7 +172,7 @@
 
 ### 8.3 実装スタック
 
-**PHP / Laravel** で Phase 1 を最初に形にする。
+**Python / Django + React** で Phase 1 を最初に形にする。
 
 ---
 
@@ -205,7 +205,7 @@
 1. ~~**`shared/business/functional-scope.md` を更新**~~ — 完了（2026-05-25）
 2. **`shared/domain/core-entities.md` を更新** — World 中心のモデルに変更
 3. **`user-stories.md` を書き直し** — 創作者・Phase 1 向けに
-4. **PHP/Laravel 実装** — 設定管理から着手
+4. **Python/Django 実装** — 設定管理から着手
 
 ---
 

@@ -1,6 +1,6 @@
 # 共通リソース（shared）
 
-5言語実装で共有するリソースを管理するディレクトリ。
+技術非依存のビジネス要件・ドメイン概念・デザインコンセプトを管理するディレクトリ。
 
 ## 📁 ディレクトリ構成
 
@@ -68,17 +68,12 @@ shared/
 
 ## 🔧 使用方法
 
-### ⚠️ Docker環境について（重要な変更）
-**新方針**: 各実装が独立したDocker環境を持つため、shared/dockerは参考用のみ
+### Docker環境について
+実装（`implementations/python-django/`）が独立したDocker環境を持つ。
 
 ```bash
-# ❌ 旧方式（非推奨）
-cd shared/docker
+cd implementations/python-django/
 docker-compose up -d
-
-# ✅ 新方式（推奨）
-cd implementations/{language}/
-docker-compose up -d  # 各実装で独立起動
 ```
 
 ### API仕様確認
