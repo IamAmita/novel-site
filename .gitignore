@@ -204,4 +204,7 @@ build/
 
 # Temporary files
 *.tmp
-*.temp 
+*.temp
+
+# Claude Code local settings (machine-specific permissions)
+.claude/settings.local.json 
