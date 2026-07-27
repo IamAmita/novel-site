@@ -1,0 +1,150 @@
+# 設定（Setting）仕様
+
+**目的**: [functional-scope.md](../business/functional-scope.md) D. 設定（Setting）の機能要件を、データモデル・画面仕様のレベルまで詳細化する
+**進め方**: Phase分けより先にデータモデル・画面設計を進める方針（2026-07-23〜）。詳細は [todo.md](../../todo.md) 参照
+
+---
+
+## データモデル
+
+### SettingTemplate（設定テンプレート）
+
+| フィールド | 型・制約 |
+|---|---|
+| world | 所属World（外部キー） |
+| name | 文字列、必須。**同一World内で一意** |
+| created_at / updated_at | タイムスタンプ |
+| deleted_at | 論理削除用（NULLなら有効） |
+
+#### 決定事項
+
+- 管理単位: **Worldごとに個別管理**（2026-07-23決定）。テンプレートはWorld間で共有されない
+- 初期セット: **World作成時に5種類（キャラクター／世界・地理／組織・勢力／物品・アイテム／歴史）を自動生成**する。ユーザーは自由に追加・編集・削除でき、初期セットも例外ではない
+
+### SettingTemplateField（テンプレート項目定義）
+
+| フィールド | 型・制約 |
+|---|---|
+| template | 所属SettingTemplate（外部キー） |
+| name | 文字列、必須（例:「性格」「所在地」） |
+| field_type | `text` または `setting_reference` |
+| order | 表示順（整数） |
+| created_at / updated_at | タイムスタンプ |
+
+#### 決定事項
+
+- field_typeは2種類のみ（**テキスト／他Settingへの参照**）。数値・日付等は Phase 1 では扱わない（functional-scope.md D参照）
+
+### Setting（設定）
+
+| フィールド | 型・制約 |
+|---|---|
+| world | 所属World（外部キー、必須） |
+| novel | 所属作品（外部キー、**任意**）。NULLならWorld全体で共有、値ありならその作品専用 |
+| template | 作成元テンプレート（外部キー、**任意**） |
+| parent | 親Setting（自己参照外部キー、任意） |
+| name | 文字列、必須 |
+| description | 文字列、任意 |
+| created_at / updated_at | タイムスタンプ |
+| deleted_at | 論理削除用（NULLなら有効） |
+
+#### 決定事項
+
+- Setting の範囲: **World単位＋作品単位の両方**（`novel`がNULLかどうかで区別）
+- テンプレート: **必須ではない**（暫定決定・要確認）。テンプレートを選ばず項目なしで作成し、後から個別に項目を追加することもできる
+- 親子階層: **必要**。親子関係は同一Setting同士のツリー構造
+  - 親子のスコープ制約（暫定）: 子のスコープは親と同じか、それより狭い範囲に限る（Worldスコープの親の下に作品スコープの子をぶら下げることは可。逆――作品スコープの親の下にWorldスコープの子を置くこと――は不可）。要確認
+- Setting削除時: **連鎖削除**（論理削除。子Setting・関連するSettingFieldも連鎖）
+- Setting名の重複: **許容**
+
+### SettingField（Settingのカスタム項目）
+
+| フィールド | 型・制約 |
+|---|---|
+| setting | 所属Setting（外部キー） |
+| name | 文字列、必須 |
+| field_type | `text` または `setting_reference` |
+| text_value | 文字列、任意（field_type=textの場合に使用） |
+| reference_value | 参照先Setting（外部キー、任意。field_type=setting_referenceの場合に使用） |
+| order | 表示順（整数） |
+| created_at / updated_at | タイムスタンプ |
+
+#### 決定事項
+
+- テンプレート由来の項目は**Setting作成時にコピー**する（2026-07-23決定）。以後テンプレートを変更しても、既存Settingの項目には影響しない
+- テンプレート由来の項目に加えて、Setting個別に項目を自由追加できる
+- 1項目につき値は1つ（複数のSetting参照を持たせたい場合は項目を複数作る）
+
+### RelationLabel（関係ラベル・マスタ）
+
+| フィールド | 型・制約 |
+|---|---|
+| name | 文字列、必須、**一意（サイト全体）** |
+| created_at / updated_at | タイムスタンプ |
+
+#### 決定事項
+
+- 管理単位: **サイト全体で共通のマスタ**（2026-07-23決定）。ユーザーは自由に追加できる（既存ラベルがあればそれを選ぶ）
+- 初期セットの有無・具体的な初期ラベルは実装時に検討
+
+### SettingRelation（Setting間の関係性）
+
+| フィールド | 型・制約 |
+|---|---|
+| from_setting | 関係元Setting（外部キー） |
+| to_setting | 関係先Setting（外部キー） |
+| label | RelationLabel（外部キー） |
+| created_at / updated_at | タイムスタンプ |
+| deleted_at | 論理削除用（NULLなら有効） |
+
+#### 決定事項
+
+- 方向性: **あり**（例:「Aの師匠はB」→ from=A, label=師匠, to=B）
+- World横断: **可**。さらに**自分が所有・編集権限を持つ範囲を越えて、他ユーザーが所有するSettingとの関係も設定できる**（2026-07-23決定。ラベルがサイト全体共通のマスタであることに対応）。ただし相手側Settingの閲覧権限がない場合の表示制御は実装時に検討
+- 視覚化（グラフ表示等）: **Phase 1に含めない**（functional-scope.md D参照）
+
+---
+
+## 画面仕様
+
+### Setting一覧画面
+
+- F（閲覧・検索）で定義した「設定一覧」メニューに対応。World横断で自分のSettingを一覧できる
+- 検索: 名前・内容の部分一致検索
+- 親子階層はツリー表示（初期は折りたたみ、必要に応じて展開）
+
+### Setting詳細画面
+
+- 表示内容: 名前・説明・カスタム項目一覧（テンプレート由来＋個別追加分）・関係性一覧（from/to両方向）・子Setting一覧
+- カスタム項目のうち`setting_reference`型は、参照先Settingへのリンクとして表示
+
+### Setting作成・編集フォーム
+
+- 入力項目: 所属World（必須）、所属作品（任意。作品単位で作る場合のみ選択）、親Setting（任意）、テンプレート（任意）、名前（必須）、説明（任意）
+- テンプレートを選択すると、そのテンプレートのSettingTemplateFieldがSettingFieldとしてコピーされる
+- 作成後もカスタム項目の追加・編集・削除、親子関係の変更が可能
+
+### テンプレート管理画面
+
+- World単位でSettingTemplate・SettingTemplateFieldの一覧・作成・編集・削除ができる
+- 初期セット5種もこの画面から編集・削除できる
+
+### 関係性の設定UI
+
+- Setting詳細画面から、関係先Setting・ラベル・方向を指定して関係性を追加できる
+- ラベルは既存のRelationLabelから選択、またはその場で新規追加できる
+
+### Setting削除
+
+- 論理削除。子Setting・SettingFieldは連鎖削除
+- 削除確認: 単純な確認ダイアログ（World.mdの方針にならう）
+
+---
+
+## 未決事項・今後の検討
+
+- テンプレート未選択でのSetting作成を許容する方針（暫定決定）でよいか、要確認
+- 親子階層のスコープ制約（Worldスコープの親→作品スコープの子は可、逆は不可という暫定ルール）でよいか、要確認
+- 他ユーザー所有のSettingとの関係性について、閲覧権限がない相手Settingの表示制御（例: 関係は見えるがリンク先は非公開表示にする等）
+- RelationLabelの初期セットの有無・具体的なラベル
+- 削除済みSettingの復元UI（World.mdと同様の方針を踏襲するか）
