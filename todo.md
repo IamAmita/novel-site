@@ -134,6 +134,25 @@
 
 ---
 
+## 2回目の横断レビューで見つかった問題点（2026-08-22）
+
+各ドメインの詳細仕様（ChangeLogの差分保存化を含む）を詰めた後、再度横断レビューを実施。
+
+### 重大
+
+- [x] ChangeLogの対象にSettingField・PenNameが漏れている → 解消（2026-08-22）。SettingFieldはSetting本体のChangeLog（`changes`内の`fields.<項目名>`）に統合、PenNameはChangeLog対象外で確定 → [Novel.md](docs/domain/Novel.md)
+- [x] ChangeLog（diff）の閲覧権限が未定義で、一般公開作品では誰でも変更履歴が見えてしまう懸念 → 解消（2026-08-22）。**ChangeLogの設計思想**（Gitを知らなくても作者・編集者が差分を直感的に確認できる体験の提供。読者向け機能ではない）を明文化し、閲覧権限は常に作者・共同制作者（`status=accepted`のCollaborator）限定で確定。あわせて過去バージョンへの復元（revert）機能は今回は見送りで確定 → [Novel.md](docs/domain/Novel.md)
+- [ ] 管理者によるPenName強制削除が、本人操作の削除ルール（Worldを1件も保持していなければ削除可能）と衝突する。強制削除時にそのPenNameが`owner_pen_name`だったWorldが所有者不在になる問題も未対応
+
+### 中程度
+
+- [x] 除名済みユーザーの実名表示（ChangeLogは匿名化しない）が読者に晒されないか確認 → 解消（2026-08-22）。Bの決定（ChangeLogは常に作者・共同制作者限定）により、読者には晒されない設計として整合済み
+- [ ] edit／full権限マトリクスに、Setting削除・SettingTemplate管理などの操作が明記されていない
+- [ ] VisibilityGrantで限定公開の対象に指定されたことを知らせる通知がない（Notification基本セットに含まれていない）
+- [ ] Episode.bodyなど長文フィールドの変更前後全文をChangeLogに保存し続けることによるデータ量増加（パフォーマンス要件は不要という前提はあるが、実装時に留意）
+
+---
+
 ## 進め方
 
 **方針（2026-07-21更新）**: 機能要件をカテゴリ A〜L まで**すべて**整理してから、Phase分け（どの機能を先に作るか）を検討する。データモデル・画面詳細などの設計は、Phase分けが終わってから着手する。
