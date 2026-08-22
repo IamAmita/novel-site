@@ -80,6 +80,7 @@
 - [x] 招待はWorld単位・作品単位の両方、権限は3段階（閲覧のみ／編集可／全権限）
 - [x] 招待権限は所有者＋所有者が許可した共同制作者、掲示板は作品単位
 - [x] 進捗管理は作品全体のステータス、公開前評価は自由コメントのみ
+- [x] データモデル・画面仕様を整理済み（Collaboratorは1テーブルでstatus管理、World権限はNovelへ自動継承、掲示板は返信付きスレッド形式、2026-08-22決定） → [Collaboration.md](docs/domain/Collaboration.md)
 
 ### I. コミュニケーション
 
@@ -114,7 +115,7 @@
 **方針変更（2026-07-23）**: Phase分けより先に、カテゴリごとにデータモデル・画面設計を進める方針に変更。Phase分けは設計がある程度進んでから改めて検討する。
 
 1. ~~機能要件 A〜L を整理する~~ — 完了（2026-07-21、[functional-scope.md](docs/business/functional-scope.md)）
-2. **データモデル・画面設計を進める**（`docs/domain/` 新設）: [User.md](docs/domain/User.md)・[World.md](docs/domain/World.md)・[Setting.md](docs/domain/Setting.md)・[Novel.md](docs/domain/Novel.md) 着手済み。次はF以降（閲覧・検索／非機能／共同制作／コミュニケーション／公開・共有／読者向け／管理機能）
+2. **データモデル・画面設計を進める**（`docs/domain/` 新設）: [User.md](docs/domain/User.md)・[World.md](docs/domain/World.md)・[Setting.md](docs/domain/Setting.md)・[Novel.md](docs/domain/Novel.md)・[Collaboration.md](docs/domain/Collaboration.md) 着手済み（F・Gは各ドメインファイルの一覧画面・非機能決定事項で実質カバー済みのため個別ファイルなし）。次はI以降（コミュニケーション／公開・共有／読者向け／管理機能）
 3. Phase分け — 設計がある程度進んだ段階で、全機能要件を俯瞰し、どの機能をどのPhaseで作るかを決定する（[Phase1-確定メモ](docs/project/Phase1-確定メモ.md) の区分を土台に見直す）
 4. 残る実装戦略の論点（既存実装の再利用方針、communications/administrationアプリの扱い）を決定する
 5. 画面設計（`docs/design/` 新設等）

@@ -15,6 +15,7 @@
 | title | 文字列、必須 |
 | synopsis | 文字列（TextField）、任意（あらすじ） |
 | cover_image | 画像、任意（未設定時は共通デフォルト画像を表示） |
+| status | 選択肢: `writing`（執筆中）/ `reviewing`（レビュー中）/ `completed`（完成） |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
 
@@ -24,6 +25,7 @@
 - 表紙画像: World.mdと同様、**任意・未設定時は共通デフォルト画像**
 - 削除時の配下データ（Chapter・Episode）: **連鎖的に論理削除**（World.mdと同様の方針）
 - 名前重複: **許容**（World.mdと同様、同一World内でも同名作品を複数作成できる）
+- 進捗ステータス: **執筆中／レビュー中／完成**の3段階（2026-08-22決定、詳細は[Collaboration.md](Collaboration.md)参照）。作成時は`writing`がデフォルト
 
 ### Chapter（章）
 
