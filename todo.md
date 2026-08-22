@@ -171,7 +171,7 @@
    - ~~[Publishing.md](docs/domain/Publishing.md): 限定公開の個別ユーザー指定の検索・追加UI、一般公開作品の検索・ランキング反映タイミング~~ — 完了（2026-08-22、user_id検索／リアルタイム計算のため即時反映）
    - ~~[Reader.md](docs/domain/Reader.md): ランキングの合成スコアかタブ切り替えか、お気に入り数の公開可否~~ — 完了（2026-08-22、タブ切り替えのみ／お気に入り数は公開）
    - ~~[Moderation.md](docs/domain/Moderation.md): ReportReasonの初期セット、一時停止解除（`expires_at`到達）時の自動復帰の仕組み~~ — 完了（2026-08-22、5項目の初期セット／アクセス時に都度チェック）
-4. Phase分け — 全機能要件・データモデルを俯瞰し、どの機能をどのPhaseで作るかを決定する（[Phase1-確定メモ](docs/project/Phase1-確定メモ.md) の区分を土台に見直す）
+4. ~~Phase分け~~ — 完了（2026-08-22）。Phase 1は**「Gitを知らなくても差分を確認しながら書ける、単独作者向けの設定・執筆管理ツール」**に決定。含めるのはA〜G区分（ユーザー最小限／World／Setting／Novel・Chapter・Episode・ChangeLog／自分向け閲覧・検索／非機能）。H（共同制作）・I（コミュニケーション）・J（公開・共有）・K（読者向け機能）・L（管理機能）は全てPhase 2以降に見送り → [Phase1-確定メモ.md](docs/project/Phase1-確定メモ.md)（v2.0に全面刷新）
 5. 残る実装戦略の論点（既存実装の再利用方針、communications/administrationアプリの扱い）を決定する
 6. 画面設計（`docs/design/` 新設等）
 7. ドキュメントが固まった領域から実装に着手する
