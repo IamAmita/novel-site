@@ -17,6 +17,7 @@
 | cover_image | 画像、任意（未設定時は共通デフォルト画像を表示） |
 | status | 選択肢: `writing`（執筆中）/ `reviewing`（レビュー中）/ `completed`（完成） |
 | visibility | 選択肢: `private`（非公開）/ `limited`（限定公開）/ `public`（一般公開）。詳細は[Publishing.md](Publishing.md)参照 |
+| category | 所属Category（外部キー、任意）。詳細は[Reader.md](Reader.md)参照 |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
 
@@ -54,6 +55,7 @@
 | body | 文字列（TextField）、任意 |
 | order | 表示順（整数） |
 | visibility | 選択肢: `NULL`（Novelを継承）/ `private` / `limited` / `public`。詳細は[Publishing.md](Publishing.md)参照 |
+| view_count | 整数、デフォルト0。詳細は[Reader.md](Reader.md)参照 |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
 
