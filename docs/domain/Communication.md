@@ -76,8 +76,8 @@
 | フィールド | 型・制約 |
 |---|---|
 | user | 通知の受信者（外部キー、User参照） |
-| notification_type | 選択肢: `comment` / `reply` / `follow` / `new_episode` / `collaboration_invite` / `collaboration_accepted` / `collaboration_declined` / `collaboration_removed` / `board_post` / `direct_message` |
-| target_type | 通知の元になった対象の種別（`comment` / `episode` / `pen_name` / `collaborator` / `board_post` / `direct_message` 等） |
+| notification_type | 選択肢: `comment` / `reply` / `follow` / `new_episode` / `collaboration_invite` / `collaboration_accepted` / `collaboration_declined` / `collaboration_removed` / `board_post` / `direct_message` / `visibility_grant` |
+| target_type | 通知の元になった対象の種別（`comment` / `episode` / `pen_name` / `collaborator` / `board_post` / `direct_message` / `novel` 等） |
 | target_id | 対象オブジェクトのid（整数） |
 | read_at | 既読タイムスタンプ、任意（NULLなら未読） |
 | created_at | タイムスタンプ |
@@ -86,7 +86,8 @@
 
 - 実装方式: **汎用Notificationモデル**（2026-08-22決定）。[Novel.md](Novel.md)のChangeLogと同様、種別ごとに個別テーブルを作らず単一テーブルに集約する
 - 通知手段: **アプリ内通知のみ**（functional-scope.md K参照。メール通知はしない）
-- notification_typeの範囲（2026-08-22決定）: **基本セット10種**（コメント／返信／フォロー／新着話／共同制作の招待・承諾・辞退・除名／掲示板投稿／DM受信）に絞る。評価（rating）通知やアカウント対応（account_action）通知などは、必要になった時点で追加する
+- notification_typeの範囲（2026-08-22決定）: **基本セット11種**（コメント／返信／フォロー／新着話／共同制作の招待・承諾・辞退・除名／掲示板投稿／DM受信／限定公開の指定）に絞る。評価（rating）通知やアカウント対応（account_action）通知などは、必要になった時点で追加する
+- `visibility_grant`通知（2026-08-22決定）: [VisibilityGrant](Publishing.md)（限定公開の個別指定）に登録されたとき、対象ユーザーに通知する
 - 既読タイミング（2026-08-22決定）: **個別クリックで既読**にする。通知一覧を開いただけでは既読にせず、各通知をクリック（タップ）した時点でその通知だけが既読になる
 - 未読バッジ（2026-08-22決定）: **未読件数を数字で表示**する
 

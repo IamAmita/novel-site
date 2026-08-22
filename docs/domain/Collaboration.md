@@ -35,11 +35,12 @@
 |---|---|---|---|
 | 閲覧 | ○ | ○ | ○ |
 | World／Setting／Novel／Chapter／Episodeの編集・執筆 | - | ○ | ○ |
+| SettingTemplate（テンプレート）の作成・編集・削除（[Setting.md](Setting.md)参照） | - | ○ | ○ |
 | 掲示板への投稿（[Board](#board掲示板)参照） | ○ | ○ | ○ |
 | 進捗ステータス変更 | - | ○ | ○ |
 | コメント削除（対象作品へのコメント。[Communication.md](Communication.md)参照） | - | ○ | ○ |
 | 共同制作者の招待・除名 | - | - | ○ |
-| World／作品の削除 | - | - | ○ |
+| World／Setting／作品の削除 | - | - | ○ |
 | 公開範囲（visibility）の変更（[Publishing.md](Publishing.md)参照） | - | - | ○ |
 | Worldの名義（owner_pen_name）変更（[World.md](World.md)参照） | - | - | ○ |
 

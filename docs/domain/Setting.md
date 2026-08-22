@@ -147,6 +147,7 @@
 - 論理削除。子Setting・SettingFieldは連鎖削除
 - 削除確認: 単純な確認ダイアログ（World.mdの方針にならう）
 - 削除後の復元: **World.mdと同じ方針**（2026-08-22決定）。期限なく手動復元可能。一覧画面から削除済みSettingをフィルタして表示し、そこから復元する
+- 削除権限（2026-08-22決定）: World／作品削除と同じく**`full`権限限定**（詳細は[Collaboration.md](Collaboration.md)の権限マトリクス参照）
 - 復元対象の制限（2026-08-22決定）: `deleted_by`が管理者による削除の場合は、この復元UIの対象外とする（詳細は[Moderation.md](Moderation.md)参照）
 
 ---

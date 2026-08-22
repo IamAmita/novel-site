@@ -46,6 +46,7 @@
 - 指定単位（2026-08-22決定）: **作品単位・話単位の両方で個別に持てる**（`target_type`で区別）。話ごとに閲覧を許可する相手を変えられる
 - 共同制作者（[Collaboration.md](Collaboration.md)の`Collaborator`）は、このテーブルに登録しなくても**自動的に閲覧可能**（functional-scope.md J参照）
 - `limited`（限定公開）時の実質的な閲覧可能者 = 共同制作者（自動）＋ このテーブルに登録された個別ユーザー
+- 通知（2026-08-22決定）: 登録されると対象ユーザーに`visibility_grant`通知が届く（詳細は[Communication.md](Communication.md)参照）
 - Episodeでの参照対象（2026-08-22決定）: **effective visibilityと同じ対象を見る**。`Episode.visibility`がNULL（Novelを継承）の場合、`VisibilityGrant`も`target_type=novel`のレコードを参照する。`Episode.visibility`に値が入っている（Novelの設定を上書きしている）場合は、`target_type=episode`のレコードを参照する
 
 ### Setting.is_public（設定の公開）
