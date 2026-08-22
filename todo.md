@@ -36,7 +36,7 @@
 - [x] ペンネーム名の重複は同一ユーザー内のみ禁止、他ユーザー間は許容
 - [x] データモデル・画面仕様を整理済み → [User.md](docs/domain/User.md)
 - [x] 「ペンネーム切り替え」はユーザー機能として持たない。名義の指定・変更はWorldごとに行う（2026-07-23決定、C参照）
-- [ ] プロフィール項目の細部は設計時に検討
+- [x] プロフィール項目の細部を確定（bioはWorld.descriptionと同じ上限1024文字、ペンネーム一覧画面はシンプル表示、2026-08-22決定） → [User.md](docs/domain/User.md)
 - [x] ユーザーIDは変更不可で確定（2026-07-28決定） → [User.md](docs/domain/User.md)
 
 ### C. 世界観（World）
@@ -55,7 +55,7 @@
 - [ ] SettingField の型拡張（数値・日付等）は設計時に再検討
 - [x] データモデル・画面仕様を整理済み → [Setting.md](docs/domain/Setting.md)（2026-07-23）
 - [x] SettingTemplateはWorldごとに個別管理、テンプレート項目はSetting作成時にコピー、RelationLabelはサイト全体共通マスタ（2026-07-23決定）
-- [ ] テンプレート未選択でのSetting作成可否、親子階層のスコープ制約は暫定決定（[Setting.md](docs/domain/Setting.md)未決事項参照、要確認）
+- [x] テンプレート未選択でのSetting作成可否、親子階層のスコープ制約、他ユーザーSettingとの関係性の表示制御を確定（2026-08-22決定） → [Setting.md](docs/domain/Setting.md)
 
 ### E. 作品・執筆（Novel / Chapter / Episode）
 
