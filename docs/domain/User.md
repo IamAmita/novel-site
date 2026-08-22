@@ -18,6 +18,7 @@
 | icon | 画像、任意 |
 | bio | 文字列、任意（自己紹介） |
 | password | 必須（ハッシュ化して保存） |
+| status | 選択肢: `active`（通常）/ `suspended`（一時停止中）/ `banned`（永久停止）。詳細は[Moderation.md](Moderation.md)参照 |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
 

@@ -108,6 +108,7 @@
 - [x] 機能要件を整理済み → [functional-scope.md](docs/business/functional-scope.md)
 - [x] 管理者は開発者のみ、対象は公開コンテンツ全般
 - [x] アカウント対応は警告・一時停止・永久停止の段階制
+- [x] データモデル・画面仕様を整理済み（通報理由は選択肢+自由記述、一時停止は任意日時指定、User.statusフィールドで現在状態を保持、2026-08-22決定） → [Moderation.md](docs/domain/Moderation.md)
 
 ---
 
@@ -118,8 +119,8 @@
 **方針変更（2026-07-23）**: Phase分けより先に、カテゴリごとにデータモデル・画面設計を進める方針に変更。Phase分けは設計がある程度進んでから改めて検討する。
 
 1. ~~機能要件 A〜L を整理する~~ — 完了（2026-07-21、[functional-scope.md](docs/business/functional-scope.md)）
-2. **データモデル・画面設計を進める**（`docs/domain/` 新設）: [User.md](docs/domain/User.md)・[World.md](docs/domain/World.md)・[Setting.md](docs/domain/Setting.md)・[Novel.md](docs/domain/Novel.md)・[Collaboration.md](docs/domain/Collaboration.md)・[Communication.md](docs/domain/Communication.md)・[Publishing.md](docs/domain/Publishing.md)・[Reader.md](docs/domain/Reader.md) 着手済み（F・Gは各ドメインファイルの一覧画面・非機能決定事項で実質カバー済みのため個別ファイルなし）。次はL（管理機能）
-3. Phase分け — 設計がある程度進んだ段階で、全機能要件を俯瞰し、どの機能をどのPhaseで作るかを決定する（[Phase1-確定メモ](docs/project/Phase1-確定メモ.md) の区分を土台に見直す）
+2. ~~データモデル・画面設計を進める~~ — 完了（2026-08-22、`docs/domain/` に[User.md](docs/domain/User.md)・[World.md](docs/domain/World.md)・[Setting.md](docs/domain/Setting.md)・[Novel.md](docs/domain/Novel.md)・[Collaboration.md](docs/domain/Collaboration.md)・[Communication.md](docs/domain/Communication.md)・[Publishing.md](docs/domain/Publishing.md)・[Reader.md](docs/domain/Reader.md)・[Moderation.md](docs/domain/Moderation.md) を整理。F・Gは各ファイルの一覧画面・非機能決定事項で実質カバー済みのため個別ファイルなし）
+3. **Phase分け** — 全機能要件・データモデルを俯瞰し、どの機能をどのPhaseで作るかを決定する（[Phase1-確定メモ](docs/project/Phase1-確定メモ.md) の区分を土台に見直す）
 4. 残る実装戦略の論点（既存実装の再利用方針、communications/administrationアプリの扱い）を決定する
 5. 画面設計（`docs/design/` 新設等）
 6. ドキュメントが固まった領域から実装に着手する
