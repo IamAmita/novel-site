@@ -16,6 +16,7 @@
 | synopsis | 文字列（TextField）、任意（あらすじ） |
 | cover_image | 画像、任意（未設定時は共通デフォルト画像を表示） |
 | status | 選択肢: `writing`（執筆中）/ `reviewing`（レビュー中）/ `completed`（完成） |
+| visibility | 選択肢: `private`（非公開）/ `limited`（限定公開）/ `public`（一般公開）。詳細は[Publishing.md](Publishing.md)参照 |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
 
@@ -26,6 +27,7 @@
 - 削除時の配下データ（Chapter・Episode）: **連鎖的に論理削除**（World.mdと同様の方針）
 - 名前重複: **許容**（World.mdと同様、同一World内でも同名作品を複数作成できる）
 - 進捗ステータス: **執筆中／レビュー中／完成**の3段階（2026-08-22決定、詳細は[Collaboration.md](Collaboration.md)参照）。作成時は`writing`がデフォルト
+- 公開範囲: **非公開／限定公開／一般公開**の3段階（2026-08-22決定、判定ロジック・個別指定の詳細は[Publishing.md](Publishing.md)参照）。作成時は`private`がデフォルト
 
 ### Chapter（章）
 
@@ -51,6 +53,7 @@
 | title | 文字列、必須 |
 | body | 文字列（TextField）、任意 |
 | order | 表示順（整数） |
+| visibility | 選択肢: `NULL`（Novelを継承）/ `private` / `limited` / `public`。詳細は[Publishing.md](Publishing.md)参照 |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
 
@@ -59,6 +62,7 @@
 - 章との関係: `chapter`が**NULLの場合はNovel直下の話**として扱う（章あり作品・章なし作品を同一モデルで表現できる）
 - 本文の文字数制限: **なし**（2026-08-22決定）。個人利用前提でパフォーマンス要件を設けない方針（functional-scope.md G参照）と一貫させる
 - 並び順: Chapterと同様、**order整数フィールドで手動並び替え**。章に属する話は章内で、章に属さない話はNovel直下で独立して並び順を持つ
+- 公開範囲: **未設定（NULL）ならNovelの設定を継承**（2026-08-22決定）。値を設定すればNovelの公開範囲を話単位で上書きできる（詳細は[Publishing.md](Publishing.md)参照）
 
 ### ChangeLog（変更履歴）
 

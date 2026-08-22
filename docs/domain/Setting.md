@@ -45,6 +45,7 @@
 | parent | 親Setting（自己参照外部キー、任意） |
 | name | 文字列、必須 |
 | description | 文字列、任意 |
+| is_public | 真偽値、デフォルト`false`。詳細は[Publishing.md](Publishing.md)参照 |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
 
@@ -56,6 +57,7 @@
   - 親子のスコープ制約（2026-08-22決定）: 子のスコープは親と同じか、それより狭い範囲に限る（Worldスコープの親の下に作品スコープの子をぶら下げることは可。逆――作品スコープの親の下にWorldスコープの子を置くこと――は不可）
 - Setting削除時: **連鎖削除**（論理削除。子Setting・関連するSettingFieldも連鎖）
 - Setting名の重複: **許容**
+- 公開: **作者が個別に選択**（2026-08-22決定、作品の公開状態とは連動しない。判定ロジックの詳細は[Publishing.md](Publishing.md)参照）
 
 ### SettingField（Settingのカスタム項目）
 

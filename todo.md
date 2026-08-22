@@ -94,6 +94,7 @@
 - [x] 機能要件を整理済み → [functional-scope.md](docs/business/functional-scope.md)
 - [x] 公開範囲は作品単位＋話単位、限定公開は共同制作者自動＋個別指定
 - [x] Setting公開は作者が個別に選択
+- [x] データモデル・画面仕様を整理済み（VisibilityGrantはNovel/Episode両方で個別指定可、Episode未設定はNovel継承、World共有Settingは公開すると即World全体に反映、2026-08-22決定） → [Publishing.md](docs/domain/Publishing.md)
 
 ### K. 読者向け機能
 
@@ -116,7 +117,7 @@
 **方針変更（2026-07-23）**: Phase分けより先に、カテゴリごとにデータモデル・画面設計を進める方針に変更。Phase分けは設計がある程度進んでから改めて検討する。
 
 1. ~~機能要件 A〜L を整理する~~ — 完了（2026-07-21、[functional-scope.md](docs/business/functional-scope.md)）
-2. **データモデル・画面設計を進める**（`docs/domain/` 新設）: [User.md](docs/domain/User.md)・[World.md](docs/domain/World.md)・[Setting.md](docs/domain/Setting.md)・[Novel.md](docs/domain/Novel.md)・[Collaboration.md](docs/domain/Collaboration.md)・[Communication.md](docs/domain/Communication.md) 着手済み（F・Gは各ドメインファイルの一覧画面・非機能決定事項で実質カバー済みのため個別ファイルなし）。次はJ以降（公開・共有／読者向け／管理機能）
+2. **データモデル・画面設計を進める**（`docs/domain/` 新設）: [User.md](docs/domain/User.md)・[World.md](docs/domain/World.md)・[Setting.md](docs/domain/Setting.md)・[Novel.md](docs/domain/Novel.md)・[Collaboration.md](docs/domain/Collaboration.md)・[Communication.md](docs/domain/Communication.md)・[Publishing.md](docs/domain/Publishing.md) 着手済み（F・Gは各ドメインファイルの一覧画面・非機能決定事項で実質カバー済みのため個別ファイルなし）。次はK以降（読者向け機能／管理機能）
 3. Phase分け — 設計がある程度進んだ段階で、全機能要件を俯瞰し、どの機能をどのPhaseで作るかを決定する（[Phase1-確定メモ](docs/project/Phase1-確定メモ.md) の区分を土台に見直す）
 4. 残る実装戦略の論点（既存実装の再利用方針、communications/administrationアプリの扱い）を決定する
 5. 画面設計（`docs/design/` 新設等）
