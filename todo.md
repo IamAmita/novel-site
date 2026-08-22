@@ -52,7 +52,7 @@
 - [x] World単位＋作品単位の両方、親子階層構造あり、削除時は連鎖削除（論理削除）、名前重複は許容
 - [x] SettingTemplate初期セット5種（編集・削除自由）、SettingFieldはテキスト＋他Setting参照
 - [x] 関係性は方向性あり・ラベルはマスタ管理（自由追加可）・World横断可、視覚化は見送り
-- [ ] SettingField の型拡張（数値・日付等）は設計時に再検討
+- [x] SettingField の型拡張（数値・日付等）は見送りで確定（2026-08-22決定）。数値・日付を活かす検索・ソート機能要件が存在しないため。将来そうした要件が出た時にセットで検討 → [Setting.md](docs/domain/Setting.md)
 - [x] データモデル・画面仕様を整理済み → [Setting.md](docs/domain/Setting.md)（2026-07-23）
 - [x] SettingTemplateはWorldごとに個別管理、テンプレート項目はSetting作成時にコピー、RelationLabelはサイト全体共通マスタ（2026-07-23決定）
 - [x] テンプレート未選択でのSetting作成可否、親子階層のスコープ制約、他ユーザーSettingとの関係性の表示制御を確定（2026-08-22決定） → [Setting.md](docs/domain/Setting.md)
@@ -61,7 +61,7 @@
 
 - [x] 機能要件を整理済み → [functional-scope.md](docs/business/functional-scope.md)
 - [x] 章は任意、設定参照はリンク記法＋サイドパネルの両方
-- [x] 変更履歴はSetting＋作品本文が対象、粒度は変更ログのみ
+- [x] 変更履歴はSetting＋作品本文が対象 → [Novel.md](docs/domain/Novel.md)。記録粒度は当初「変更ログのみ」としたが、2026-08-22に**変更前後の値を保存しGitHubのコミット履歴のような差分表示を行う方式**へ変更（下記参照）
 - [x] データモデル・画面仕様を整理済み（本文文字数制限なし、章削除時はNovel直下へ付け替え、変更履歴は汎用ChangeLogモデル、2026-08-22決定） → [Novel.md](docs/domain/Novel.md)
 
 ### F. 閲覧・検索（自分向け）
@@ -142,10 +142,20 @@
 
 1. ~~機能要件 A〜L を整理する~~ — 完了（2026-07-21、[functional-scope.md](docs/business/functional-scope.md)）
 2. ~~データモデル・画面設計を進める~~ — 完了（2026-08-22、`docs/domain/` に[User.md](docs/domain/User.md)・[World.md](docs/domain/World.md)・[Setting.md](docs/domain/Setting.md)・[Novel.md](docs/domain/Novel.md)・[Collaboration.md](docs/domain/Collaboration.md)・[Communication.md](docs/domain/Communication.md)・[Publishing.md](docs/domain/Publishing.md)・[Reader.md](docs/domain/Reader.md)・[Moderation.md](docs/domain/Moderation.md) を整理。F・Gは各ファイルの一覧画面・非機能決定事項で実質カバー済みのため個別ファイルなし）
-3. **Phase分け** — 全機能要件・データモデルを俯瞰し、どの機能をどのPhaseで作るかを決定する（[Phase1-確定メモ](docs/project/Phase1-確定メモ.md) の区分を土台に見直す）
-4. 残る実装戦略の論点（既存実装の再利用方針、communications/administrationアプリの扱い）を決定する
-5. 画面設計（`docs/design/` 新設等）
-6. ドキュメントが固まった領域から実装に着手する
+3. ~~各ドメインの詳細仕様を詰める~~ — 完了（2026-08-22。各domainファイルに残っていた未決事項・細部仕様を全て確定。ChangeLogは「GitHubのコミット履歴のような差分表示」の要望を受け、変更ログのみの記録から変更前後の値を保存する方式に方針変更）。対象一覧:
+   - ~~[Setting.md](docs/domain/Setting.md): SettingFieldの型拡張（数値・日付等）~~ — 完了（2026-08-22、見送りで確定）
+   - ~~[World.md](docs/domain/World.md): 削除済みWorldの復元UI（画面遷移・アクセス経路）~~ — 完了（2026-08-22、一覧画面の「削除済みを表示」トグルに統一）
+   - ~~[Novel.md](docs/domain/Novel.md): 削除済みNovel/Chapter/Episodeの復元UI、ChangeLogの一覧・詳細画面UI~~ — 完了（2026-08-22、階層ごとに同じフィルタ方式／ChangeLogは対象ごとの絞り込みのみ）
+   - ~~[Collaboration.md](docs/domain/Collaboration.md): 除名（`removed`）されたユーザーの投稿・変更履歴の扱い~~ — 完了（2026-08-22。Comment/BoardPostは投稿者名を匿名化、ChangeLogは追跡目的のため実名のまま残す）
+   - ~~ChangeLog（[Novel.md](docs/domain/Novel.md)）の記録方式~~ — 完了（2026-08-22、GitHubのコミット履歴のような差分表示が欲しいとの要望を受け、変更ログのみの記録から「フィールド単位で変更前後の値を保存しdiff表示する」方式に変更）
+   - ~~[Communication.md](docs/domain/Communication.md): Notificationの`notification_type`列挙、DM・通知の既読UI詳細~~ — 完了（2026-08-22、基本セット10種／個別クリックで既読／未読件数バッジ）
+   - ~~[Publishing.md](docs/domain/Publishing.md): 限定公開の個別ユーザー指定の検索・追加UI、一般公開作品の検索・ランキング反映タイミング~~ — 完了（2026-08-22、user_id検索／リアルタイム計算のため即時反映）
+   - ~~[Reader.md](docs/domain/Reader.md): ランキングの合成スコアかタブ切り替えか、お気に入り数の公開可否~~ — 完了（2026-08-22、タブ切り替えのみ／お気に入り数は公開）
+   - ~~[Moderation.md](docs/domain/Moderation.md): ReportReasonの初期セット、一時停止解除（`expires_at`到達）時の自動復帰の仕組み~~ — 完了（2026-08-22、5項目の初期セット／アクセス時に都度チェック）
+4. Phase分け — 全機能要件・データモデルを俯瞰し、どの機能をどのPhaseで作るかを決定する（[Phase1-確定メモ](docs/project/Phase1-確定メモ.md) の区分を土台に見直す）
+5. 残る実装戦略の論点（既存実装の再利用方針、communications/administrationアプリの扱い）を決定する
+6. 画面設計（`docs/design/` 新設等）
+7. ドキュメントが固まった領域から実装に着手する
 
 ---
 

@@ -25,6 +25,7 @@
 - 対象: **作品（Novel）＋話（Episode）の両方**（functional-scope.md I参照）
 - 返信階層: **1階層のみ**（2026-08-22決定）。`parent`を持つコメント（返信）はさらに`parent`を持てない（アプリ側バリデーションで制約し、同じ親コメントの下にフラットに並ぶ）
 - 削除: **論理削除**。投稿者本人、または対象作品の所有者（Worldの`owner_pen_name`）、および[Collaboration.md](Collaboration.md)で`edit`／`full`権限を持つ共同制作者が削除できる
+- 除名済み共同制作者の投稿者表示（2026-08-22決定）: 投稿者がその後[Collaborator](Collaboration.md)から`removed`（除名）された場合、投稿自体は残すが、投稿者名は「削除された共同制作者」等に匿名化して表示する
 
 ### Rating（評価）
 
@@ -75,8 +76,8 @@
 | フィールド | 型・制約 |
 |---|---|
 | user | 通知の受信者（外部キー、User参照） |
-| notification_type | 選択肢: `comment` / `reply` / `follow` / `new_episode` / `collaboration_invite` 等 |
-| target_type | 通知の元になった対象の種別（`comment` / `episode` / `pen_name` / `collaborator` 等） |
+| notification_type | 選択肢: `comment` / `reply` / `follow` / `new_episode` / `collaboration_invite` / `collaboration_accepted` / `collaboration_declined` / `collaboration_removed` / `board_post` / `direct_message` |
+| target_type | 通知の元になった対象の種別（`comment` / `episode` / `pen_name` / `collaborator` / `board_post` / `direct_message` 等） |
 | target_id | 対象オブジェクトのid（整数） |
 | read_at | 既読タイムスタンプ、任意（NULLなら未読） |
 | created_at | タイムスタンプ |
@@ -85,6 +86,9 @@
 
 - 実装方式: **汎用Notificationモデル**（2026-08-22決定）。[Novel.md](Novel.md)のChangeLogと同様、種別ごとに個別テーブルを作らず単一テーブルに集約する
 - 通知手段: **アプリ内通知のみ**（functional-scope.md K参照。メール通知はしない）
+- notification_typeの範囲（2026-08-22決定）: **基本セット10種**（コメント／返信／フォロー／新着話／共同制作の招待・承諾・辞退・除名／掲示板投稿／DM受信）に絞る。評価（rating）通知やアカウント対応（account_action）通知などは、必要になった時点で追加する
+- 既読タイミング（2026-08-22決定）: **個別クリックで既読**にする。通知一覧を開いただけでは既読にせず、各通知をクリック（タップ）した時点でその通知だけが既読になる
+- 未読バッジ（2026-08-22決定）: **未読件数を数字で表示**する
 
 ---
 
@@ -116,10 +120,11 @@
 
 - Notificationの一覧を時系列で表示し、既読・未読を区別する
 - 種別に応じて対象（コメント元・フォロワーのPenName・新着話等）へのリンクを表示する
+- 既読化（2026-08-22決定）: 一覧を開いただけでは既読にならず、個別の通知をクリックした時点でその通知のみ既読になる
+- 未読バッジ（2026-08-22決定）: ヘッダー等に未読件数を数字で表示する
 
 ---
 
 ## 未決事項・今後の検討
 
-- Notificationの`notification_type`の具体的な列挙は、実装が進むにつれ随時追加する
-- DM・通知の既読UIの詳細（既読タイミング、未読バッジの粒度等）は実装設計時に検討
+（現時点でなし。今後の実装・設計の中で新たに論点が出た場合はここに追記する）
