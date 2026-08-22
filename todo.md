@@ -112,6 +112,28 @@
 
 ---
 
+## 横断レビューで見つかった未決事項（2026-08-22、全10件解消済み）
+
+`docs/domain/` 配下の9ファイル（User/World/Setting/Novel/Collaboration/Communication/Publishing/Reader/Moderation）を横断的にレビューし、ファイル単体では見えにくい矛盾・抜けを洗い出した。以下すべて2026-08-22中に方針を確定し、各ファイルへ反映済み。
+
+### 重大（設計の根幹に関わる）
+
+- [x] 管理者の強制削除と作者の自主削除の区別を確定（2026-08-22決定）: 通報対象6モデル（World/Setting/Novel/Episode/Comment/PenName）に`deleted_by`（任意）を追加し、管理者による削除は作者の復元UI対象外とする → [Moderation.md](docs/domain/Moderation.md)
+- [x] 非公開Settingへの参照の表示制御を確定（2026-08-22決定）: `SettingField.reference_value`・Episode本文中の`[[Setting名]]`リンク記法とも、`SettingRelation`と同じルール（項目名／リンクテキストは表示するが参照先の詳細は伏せてリンク無効化）を適用 → [Setting.md](docs/domain/Setting.md)・[Novel.md](docs/domain/Novel.md)
+- [x] 閲覧権限判定を明確化（2026-08-22決定）: `Collaborator`は`status=accepted`のレコードのみを閲覧可能者とみなす。Episodeの判定はEpisode自体ではなく所属Novel／Worldに対するCollaboratorを見る → [Publishing.md](docs/domain/Publishing.md)
+- [x] `Episode.visibility`が`NULL`（Novelを継承）のときのVisibilityGrant参照先を確定（2026-08-22決定）: effective visibilityと同じ対象を見る（NULLならNovel向け、値ありならEpisode向け） → [Publishing.md](docs/domain/Publishing.md)
+
+### 中程度
+
+- [x] `Report`の対象範囲を拡張（2026-08-22決定）: `novel`／`episode`／`comment`／`world`／`setting`／`pen_name`の6種類を対象とする → [Moderation.md](docs/domain/Moderation.md)。あわせて対象6モデルすべてに`deleted_by`を追加し、管理者削除を判定できるようにした → [World.md](docs/domain/World.md)・[Setting.md](docs/domain/Setting.md)・[Novel.md](docs/domain/Novel.md)・[Communication.md](docs/domain/Communication.md)・[User.md](docs/domain/User.md)
+- [x] `edit`／`full`の権限差を権限マトリクスとして確定（2026-08-22決定）: editはコンテンツ編集・運用まで、fullは招待・除名・削除・公開設定変更などの管理操作まで → [Collaboration.md](docs/domain/Collaboration.md)
+- [x] `BoardPost`／`BoardThread`の削除権限者を確定（2026-08-22決定）: Commentと同じ基準（投稿者本人／作者／edit・full権限者） → [Collaboration.md](docs/domain/Collaboration.md)
+- [x] World詳細画面の共同制作者権限に応じた表示差分を確定（2026-08-22決定）。あわせてWorldの名義（owner_pen_name）変更もfull権限限定の操作として権限マトリクスに追加 → [World.md](docs/domain/World.md)・[Collaboration.md](docs/domain/Collaboration.md)
+- [x] マスタデータ削除時の既存参照の扱いを確定（2026-08-22決定）: 基本方針は`SET_NULL`（Category/RelationLabel/SettingTemplate）。多対多の中間テーブル（Tag/NovelTag）は該当行を削除。いずれも使用中でも自由に削除できる → [Reader.md](docs/domain/Reader.md)・[Setting.md](docs/domain/Setting.md)
+- [x] アカウント停止後の既存公開コンテンツの扱いを確定（2026-08-22決定）: `suspend`／`ban`実行時、所有する全Novelを自動的に`private`化。停止解除時も自動では戻さず本人が手動再設定 → [Moderation.md](docs/domain/Moderation.md)
+
+---
+
 ## 進め方
 
 **方針（2026-07-21更新）**: 機能要件をカテゴリ A〜L まで**すべて**整理してから、Phase分け（どの機能を先に作るか）を検討する。データモデル・画面詳細などの設計は、Phase分けが終わってから着手する。

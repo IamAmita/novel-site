@@ -46,6 +46,7 @@
 - 指定単位（2026-08-22決定）: **作品単位・話単位の両方で個別に持てる**（`target_type`で区別）。話ごとに閲覧を許可する相手を変えられる
 - 共同制作者（[Collaboration.md](Collaboration.md)の`Collaborator`）は、このテーブルに登録しなくても**自動的に閲覧可能**（functional-scope.md J参照）
 - `limited`（限定公開）時の実質的な閲覧可能者 = 共同制作者（自動）＋ このテーブルに登録された個別ユーザー
+- Episodeでの参照対象（2026-08-22決定）: **effective visibilityと同じ対象を見る**。`Episode.visibility`がNULL（Novelを継承）の場合、`VisibilityGrant`も`target_type=novel`のレコードを参照する。`Episode.visibility`に値が入っている（Novelの設定を上書きしている）場合は、`target_type=episode`のレコードを参照する
 
 ### Setting.is_public（設定の公開）
 
@@ -68,8 +69,10 @@
 
 1. **effective visibility** を決定する: Episodeの場合は`Episode.visibility`（NULLなら所属`Novel.visibility`）、Novelの場合は`Novel.visibility`
 2. `public`: 誰でも閲覧可能
-3. `private`: Worldの`owner_pen_name`が属するUser、および対象（World／Novel）に対する[Collaborator](Collaboration.md)のみ閲覧可能
+3. `private`: Worldの`owner_pen_name`が属するUser、および対象（World／Novel）に対する**`status=accepted`の**[Collaborator](Collaboration.md)のみ閲覧可能（2026-08-22明確化）。`pending`（招待中で未回答）・`declined`（辞退）・`removed`（除名済み）のレコードは閲覧可能者に含めない
 4. `limited`: 上記`private`の閲覧可能者に加え、対象の`VisibilityGrant`に登録されたユーザーも閲覧可能
+5. Episodeの閲覧可否を判定する際の`Collaborator`は、Episode自体ではなく**所属Novel（またはそのWorld）に対するレコード**を見る（Collaboratorの`target_type`は`world`／`novel`のみのため）
+6. Episodeの`VisibilityGrant`は、**手順1で決定したeffective visibilityと同じ対象**を見る。`Episode.visibility`がNULL（Novel継承）ならNovel向けの`VisibilityGrant`を、値が入っていればEpisode向けの`VisibilityGrant`を参照する（2026-08-22決定）
 
 Settingの閲覧可否は上記と独立し、`is_public`が`true`なら誰でも、`false`なら所有者・共同制作者のみが閲覧できる。
 

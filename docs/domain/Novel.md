@@ -20,6 +20,7 @@
 | category | 所属Category（外部キー、任意）。詳細は[Reader.md](Reader.md)参照 |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
+| deleted_by | 削除実行者（外部キー、User参照、任意）。管理者による強制削除の判定に使う。詳細は[Moderation.md](Moderation.md)参照 |
 
 #### 決定事項
 
@@ -58,6 +59,7 @@
 | view_count | 整数、デフォルト0。詳細は[Reader.md](Reader.md)参照 |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
+| deleted_by | 削除実行者（外部キー、User参照、任意）。管理者による強制削除の判定に使う。詳細は[Moderation.md](Moderation.md)参照 |
 
 #### 決定事項
 
@@ -108,6 +110,7 @@
 - 論理削除。配下のChapter・Episodeは連鎖削除
 - 削除確認: 単純な確認ダイアログ（World.mdの方針にならう）
 - 削除後の復元: World.mdと同じ方針。期限なく手動復元可能
+- 復元対象の制限（2026-08-22決定）: `deleted_by`が管理者による削除の場合は、この復元UIの対象外とする（Episodeも同様。詳細は[Moderation.md](Moderation.md)参照）
 
 ### 章（Chapter）管理
 
@@ -119,6 +122,7 @@
 - タイトル・本文を編集する
 - 設定参照: 本文中にリンク記法（例: `[[Setting名]]`）で参照を埋め込めるほか、サイドパネルからSettingを選んで挿入することもできる
 - 保存のたびにChangeLogへ記録される
+- 閲覧権限がない参照先の表示制御（2026-08-22決定）: 読者がリンク先Settingの閲覧権限を持たない場合、**[Setting.md](Setting.md)のSettingFieldと同じルール**を適用する。リンクテキスト（Setting名）は表示するが、無効化して遷移も詳細表示もさせない（執筆者本人の本文自体は変更しない）
 
 ### 変更履歴（ChangeLog）閲覧画面
 

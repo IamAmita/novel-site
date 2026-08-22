@@ -25,7 +25,23 @@
 - 招待単位: **World単位・作品（Novel）単位の両方**（`target_type`で区別）
 - 権限の粒度: **閲覧のみ／編集可／全権限**の3段階（functional-scope.md H参照）
 - 権限の継承（2026-08-22決定）: **World単位の権限はNovelに自動継承する**。あるNovelへのアクセス権限を判定する際は、まずそのNovelに対する直接のCollaboratorレコード（`target_type=novel`）を確認し、なければ所属Worldに対するCollaboratorレコード（`target_type=world`）を見る。**Novel単位の権限があればWorld単位の権限より優先される**（Worldでは編集可でも、特定Novelだけ閲覧のみに制限する、といった上書きができる）
-- 招待権限: **所有者（Worldのowner_pen_name／NovelのownerにあたるWorldのowner_pen_name）、および所有者が許可した共同制作者も招待できる**（functional-scope.md H参照。「許可した」の具体的な操作は未決事項参照）
+- 招待権限: **所有者（Worldのowner_pen_name／NovelのownerにあたるWorldのowner_pen_name）、および`full`権限を持つ共同制作者も招待できる**（2026-08-22決定。functional-scope.md H「所有者が許可した共同制作者」を、`full`権限保有として具体化した）
+
+#### edit／fullの権限差（2026-08-22決定）
+
+`edit`は「コンテンツの編集・運用」に関わる操作まで、`full`はそれに加えて「所有権・体制」に関わる管理操作まで行える、という基準で線引きする。
+
+| 操作 | `view` | `edit` | `full` |
+|---|---|---|---|
+| 閲覧 | ○ | ○ | ○ |
+| World／Setting／Novel／Chapter／Episodeの編集・執筆 | - | ○ | ○ |
+| 掲示板への投稿（[Board](#board掲示板)参照） | ○ | ○ | ○ |
+| 進捗ステータス変更 | - | ○ | ○ |
+| コメント削除（対象作品へのコメント。[Communication.md](Communication.md)参照） | - | ○ | ○ |
+| 共同制作者の招待・除名 | - | - | ○ |
+| World／作品の削除 | - | - | ○ |
+| 公開範囲（visibility）の変更（[Publishing.md](Publishing.md)参照） | - | - | ○ |
+| Worldの名義（owner_pen_name）変更（[World.md](World.md)参照） | - | - | ○ |
 
 ### Board（掲示板）
 
@@ -61,6 +77,7 @@
 #### 決定事項
 
 - 実装形式: **返信付きスレッド形式**（2026-08-22決定）。1つのBoardThreadに複数のBoardPostがぶら下がる構成（フラットな一覧ではなくスレッド単位で議論をまとめる）
+- 削除権限（2026-08-22決定）: [Communication.md](Communication.md)のCommentと同じ基準。投稿者本人、または対象Novelの所有者（Worldの`owner_pen_name`）、および`edit`／`full`権限を持つ共同制作者がBoardThread・BoardPostを削除できる
 
 ### Novel.status（進捗ステータス）
 
@@ -108,6 +125,4 @@
 
 ## 未決事項・今後の検討
 
-- 「所有者が許可した共同制作者も招待できる」の具体的な操作（招待権限自体を個別に付与するフラグを持つか、`full`権限者は常に招待できるとするか）
-- `edit`（編集可）と`full`（全権限）の権限差の具体（例: 共同制作者の招待・除名、作品削除、公開設定変更などをどちらが行えるか）
 - 除名（`removed`）されたユーザーの、それまでの投稿・変更履歴の扱い（残す前提だが、表示上の扱いは実装時に検討）

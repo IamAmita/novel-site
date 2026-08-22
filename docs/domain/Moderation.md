@@ -18,7 +18,7 @@
 
 | フィールド | 型・制約 |
 |---|---|
-| target_type | 選択肢: `novel` / `comment` |
+| target_type | 選択肢: `novel` / `episode` / `comment` / `world` / `setting` / `pen_name` |
 | target_id | 対象オブジェクトのid（整数） |
 | reporter | 通報者（外部キー、User参照） |
 | reason | 通報理由（外部キー、ReportReason参照） |
@@ -28,7 +28,7 @@
 
 #### 決定事項
 
-- 対象: **公開コンテンツ全般（作品・コメント両方）**（functional-scope.md L参照）
+- 対象: **公開されうる全モデル**（2026-08-22決定、functional-scope.md L「公開コンテンツ全般」を拡張）。Novel／Episode／Commentに加え、World（名前・説明・表紙画像）、Setting（`is_public=true`のもの）、PenName（表示名・アイコン・自己紹介）も対象とする
 - 理由の入力方式: **選択肢＋自由記述**（2026-08-22決定）。ReportReasonマスタから選び、`detail`で補足できる
 
 ### AccountAction（アカウント対応履歴）
@@ -45,6 +45,8 @@
 
 - 対応の粒度: **警告／一時停止／永久停止**の段階制（functional-scope.md L参照）
 - 一時停止期間: **管理者が任意の日時を指定**（2026-08-22決定）。固定の期間選択肢は用意しない
+- 既存公開コンテンツの扱い（2026-08-22決定）: `suspend`／`ban`を実行すると、対象ユーザーが所有する全World配下のNovelを**自動的に`private`へ変更する**（[Publishing.md](Publishing.md)参照）。警告（`warning`）では変更しない
+- 停止解除時の扱い（2026-08-22決定）: 一時停止が解除（`expires_at`到達等で`User.status`が`active`に戻る）されても、自動非公開化したNovelの公開範囲は**自動的には戻さない**。作者本人が確認のうえ手動で再設定する（停止理由が解消していないのに意図せず再公開される事態を避ける）
 
 ### User.status（ユーザーの現在状態）
 
@@ -81,7 +83,10 @@
 
 ### コンテンツ削除
 
-- 管理者は公開コンテンツ（作品・コメント）を削除できる。実装は既存の論理削除（`deleted_at`）の仕組みをそのまま利用する
+- 管理者は公開コンテンツを削除できる。実装は既存の論理削除（`deleted_at`）の仕組みを利用する
+- 削除実行者の区別（2026-08-22決定）: 通報対象の6モデル（**World／Setting／Novel／Episode／Comment／PenName**）に**`deleted_by`（外部キー、User参照、任意）を追加**する。作者自身や共同制作者が削除した場合は`deleted_by`にその人が入り、管理者が通報対応として削除した場合は管理者のUserが入る
+- 作者向けの「削除済み一覧からの復元」UI（[World.md](World.md)・[Novel.md](Novel.md)・[Setting.md](Setting.md)等）は、**`deleted_by`が管理者（`is_staff=true`）のレコードを対象外とする**（一覧に表示しない・復元操作を無効化する）。管理者による削除を作者が誤って（あるいは意図的に）復元できてしまう事態を防ぐ
+- 管理者削除の取り消しは、管理画面から別途行える（管理者の判断ミスがあった場合の救済手段）
 
 ---
 

@@ -18,6 +18,7 @@
 | body | 文字列（TextField）、必須 |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
+| deleted_by | 削除実行者（外部キー、User参照、任意）。管理者による強制削除の判定に使う。詳細は[Moderation.md](Moderation.md)参照 |
 
 #### 決定事項
 
@@ -121,5 +122,4 @@
 ## 未決事項・今後の検討
 
 - Notificationの`notification_type`の具体的な列挙は、実装が進むにつれ随時追加する
-- コメント削除権限のうち、`edit`権限者にも削除を許すか`full`権限者限定にするかは、[Collaboration.md](Collaboration.md)の権限差の未決事項とあわせて検討する
 - DM・通知の既読UIの詳細（既読タイミング、未読バッジの粒度等）は実装設計時に検討

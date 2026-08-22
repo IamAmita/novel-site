@@ -48,6 +48,7 @@
 | is_public | 真偽値、デフォルト`false`。詳細は[Publishing.md](Publishing.md)参照 |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
+| deleted_by | 削除実行者（外部キー、User参照、任意）。管理者による強制削除の判定に使う。詳細は[Moderation.md](Moderation.md)参照 |
 
 #### 決定事項
 
@@ -58,6 +59,7 @@
 - Setting削除時: **連鎖削除**（論理削除。子Setting・関連するSettingFieldも連鎖）
 - Setting名の重複: **許容**
 - 公開: **作者が個別に選択**（2026-08-22決定、作品の公開状態とは連動しない。判定ロジックの詳細は[Publishing.md](Publishing.md)参照）
+- テンプレート削除時の既存参照（2026-08-22決定）: **SET_NULL**。SettingTemplateを削除しても`Setting.template`はNULLになるだけで、Setting自体やコピー済みのSettingFieldには影響しない（SettingField側は作成時にコピーされ独立しているため、影響を受けない）
 
 ### SettingField（Settingのカスタム項目）
 
@@ -76,6 +78,7 @@
 - テンプレート由来の項目は**Setting作成時にコピー**する（2026-07-23決定）。以後テンプレートを変更しても、既存Settingの項目には影響しない
 - テンプレート由来の項目に加えて、Setting個別に項目を自由追加できる
 - 1項目につき値は1つ（複数のSetting参照を持たせたい場合は項目を複数作る）
+- 閲覧権限がない参照先の表示制御（2026-08-22決定）: `reference_value`が閲覧権限のないSettingを指している場合、**SettingRelationと同じルール**を適用する。項目名は表示するが、参照先Settingの名前・詳細は伏せて「(非公開の設定)」のように表示し、リンクもさせない
 
 ### RelationLabel（関係ラベル・マスタ）
 
@@ -95,7 +98,7 @@
 |---|---|
 | from_setting | 関係元Setting（外部キー） |
 | to_setting | 関係先Setting（外部キー） |
-| label | RelationLabel（外部キー） |
+| label | RelationLabel（外部キー、**任意**。ラベル削除時はNULLになる） |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
 
@@ -105,6 +108,7 @@
 - World横断: **可**。さらに**自分が所有・編集権限を持つ範囲を越えて、他ユーザーが所有するSettingとの関係も設定できる**（2026-07-23決定。ラベルがサイト全体共通のマスタであることに対応）
 - 閲覧権限がない相手Settingの表示制御（2026-08-22決定）: **関係の存在・ラベルは表示するが、相手Settingは非公開扱いで表示する**（名前・詳細は伏せ、リンクもさせない）。例:「(非公開の設定)との関係: 師匠」
 - 視覚化（グラフ表示等）: **Phase 1に含めない**（functional-scope.md D参照）
+- ラベル削除時の既存参照（2026-08-22決定）: **SET_NULL**。RelationLabelを削除すると、それを参照していたSettingRelation.labelはNULLになる（関係自体は残り、「(ラベルなし)」等と表示する）。使用中でも自由に削除できる
 
 ---
 
@@ -142,6 +146,7 @@
 - 論理削除。子Setting・SettingFieldは連鎖削除
 - 削除確認: 単純な確認ダイアログ（World.mdの方針にならう）
 - 削除後の復元: **World.mdと同じ方針**（2026-08-22決定）。期限なく手動復元可能。一覧画面から削除済みSettingをフィルタして表示し、そこから復元する
+- 復元対象の制限（2026-08-22決定）: `deleted_by`が管理者による削除の場合は、この復元UIの対象外とする（詳細は[Moderation.md](Moderation.md)参照）
 
 ---
 

@@ -64,6 +64,7 @@
 | bio | 文字列、任意（自己紹介） |
 | created_at / updated_at | タイムスタンプ |
 | deleted_at | 論理削除用（NULLなら有効） |
+| deleted_by | 削除実行者（外部キー、User参照、任意）。管理者による強制削除の判定に使う。詳細は[Moderation.md](Moderation.md)参照 |
 
 #### 決定事項
 
