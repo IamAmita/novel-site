@@ -62,7 +62,7 @@
 - [x] 機能要件を整理済み → [functional-scope.md](docs/business/functional-scope.md)
 - [x] 章は任意、設定参照はリンク記法＋サイドパネルの両方
 - [x] 変更履歴はSetting＋作品本文が対象、粒度は変更ログのみ
-- [ ] 文字数制限・画像仕様は設計時に検討
+- [x] データモデル・画面仕様を整理済み（本文文字数制限なし、章削除時はNovel直下へ付け替え、変更履歴は汎用ChangeLogモデル、2026-08-22決定） → [Novel.md](docs/domain/Novel.md)
 
 ### F. 閲覧・検索（自分向け）
 
@@ -114,7 +114,7 @@
 **方針変更（2026-07-23）**: Phase分けより先に、カテゴリごとにデータモデル・画面設計を進める方針に変更。Phase分けは設計がある程度進んでから改めて検討する。
 
 1. ~~機能要件 A〜L を整理する~~ — 完了（2026-07-21、[functional-scope.md](docs/business/functional-scope.md)）
-2. **データモデル・画面設計を進める**（`docs/domain/` 新設）: [User.md](docs/domain/User.md)・[World.md](docs/domain/World.md)・[Setting.md](docs/domain/Setting.md) 着手済み。次はE（作品・執筆）以降
+2. **データモデル・画面設計を進める**（`docs/domain/` 新設）: [User.md](docs/domain/User.md)・[World.md](docs/domain/World.md)・[Setting.md](docs/domain/Setting.md)・[Novel.md](docs/domain/Novel.md) 着手済み。次はF以降（閲覧・検索／非機能／共同制作／コミュニケーション／公開・共有／読者向け／管理機能）
 3. Phase分け — 設計がある程度進んだ段階で、全機能要件を俯瞰し、どの機能をどのPhaseで作るかを決定する（[Phase1-確定メモ](docs/project/Phase1-確定メモ.md) の区分を土台に見直す）
 4. 残る実装戦略の論点（既存実装の再利用方針、communications/administrationアプリの扱い）を決定する
 5. 画面設計（`docs/design/` 新設等）
