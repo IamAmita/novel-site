@@ -10,9 +10,9 @@
 - **実装言語**: Python（Django + React）に一本化。他言語実装（PHP/TypeScript/Java/Go）は着手しない
 - **ドキュメント構成**: `shared/` は廃止し `docs/` に一元化（`docs/project/` に方針・意思決定を記録）
 - **ドメイン構造の大枠**: 作者（ペンネーム単位）→ World（世界観）→ Setting（設定）／作品 → 章 → 話
-- **既存 python-django 実装**: 現状は Novel 中心モデル（読者・コメント・掲示板等を含む広範な機能）。どこまで再利用するかは機能要件確定後に判断する
+- **既存 python-django 実装**: `implementations/python-django/`にNovel中心モデル（読者・コメント・掲示板等を含む広範な機能、バックエンド7アプリ）が実装済みだが、**参考のみに留め、`docs/domain/`の確定済み設計に基づき新規に作り直す**方針で確定（2026-08-22）。PenName（ペンネーム）という中核概念が既存実装に存在しないなど、根幹の前提が異なるため
 
-> 2026-07-21: 要件・設計ドキュメントを一旦すべて削除し、機能要件から順にしっかり整理し直した。当初は Phase1-確定メモ の Phase 区分に沿って進めていたが、**「まず全機能要件を出し切ってから Phase 分けする」方針に変更**。[docs/business/functional-scope.md](docs/business/functional-scope.md) に **A〜L すべての機能要件を整理済み**（[Phase1-確定メモ](docs/project/Phase1-確定メモ.md) の Phase 区分は暫定の記録として残るのみで、今回の整理を拘束しない）。次のステップは Phase 分け。
+> 2026-07-21: 要件・設計ドキュメントを一旦すべて削除し、機能要件から順にしっかり整理し直した。当初は Phase1-確定メモ の Phase 区分に沿って進めていたが、**「まず全機能要件を出し切ってから Phase 分けする」方針に変更**。[docs/business/functional-scope.md](docs/business/functional-scope.md) に **A〜L すべての機能要件を整理済み**。その後 `docs/domain/` でデータモデル・画面仕様も全区分整理し、2026-08-22にPhase分け・実装戦略の論点も確定した（詳細は[Phase1-確定メモ](docs/project/Phase1-確定メモ.md)、本ファイルの「進め方」参照）。次のステップは画面設計・実装着手。
 
 ---
 
@@ -21,8 +21,8 @@
 ### A. 全体方針・ドメイン構造
 
 - [x] ドメイン構造「作者 → ペンネーム → World → Setting／作品 → 章 → 話」で確定 → [functional-scope.md](docs/business/functional-scope.md)
-- [ ] 既存 python-django 実装（Novel 中心・バックエンド7アプリ）をどこまで再利用するか。完全に作り直すか、段階的に置き換えるか（全機能要件確定後に判断）
-- [ ] `communications` / `administration` アプリ（コメント・通知・掲示板・管理機能等）をどう扱うか（全機能要件確定後に判断）
+- [x] 既存 python-django 実装の扱いを確定（2026-08-22決定）: **参考のみに留め、新規に作り直す**。既存実装（`implementations/python-django/backend/apps/`の7アプリ）を調査した結果、今回確定した設計の根幹である**PenName（ペンネーム）という概念が既存実装に存在しない**（Userが直接作者）ことが判明。worlds/novelsアプリを活かそうとしても外部キー構造から大規模改修が必要になるため、コードは参考にしつつ`docs/domain/`の確定済み設計に沿ってゼロから実装する
+- [x] `communications` / `administration` アプリの扱いを確定（2026-08-22決定）: 既存実装は参考のみ（新規作り直し方針に準じる）。加えてコメント・通知・掲示板・管理機能はいずれもI／L区分であり、[Phase1-確定メモ](docs/project/Phase1-確定メモ.md)でPhase 2以降と決まっているため、**Phase 1では実装自体を行わない**。Phase 2着手時に[Communication.md](docs/domain/Communication.md)・[Moderation.md](docs/domain/Moderation.md)の確定済み設計に基づいて新規実装する
 
 ### B. ユーザー・ペンネーム管理
 
@@ -172,7 +172,7 @@
    - ~~[Reader.md](docs/domain/Reader.md): ランキングの合成スコアかタブ切り替えか、お気に入り数の公開可否~~ — 完了（2026-08-22、タブ切り替えのみ／お気に入り数は公開）
    - ~~[Moderation.md](docs/domain/Moderation.md): ReportReasonの初期セット、一時停止解除（`expires_at`到達）時の自動復帰の仕組み~~ — 完了（2026-08-22、5項目の初期セット／アクセス時に都度チェック）
 4. ~~Phase分け~~ — 完了（2026-08-22）。Phase 1は**「Gitを知らなくても差分を確認しながら書ける、単独作者向けの設定・執筆管理ツール」**に決定。含めるのはA〜G区分（ユーザー最小限／World／Setting／Novel・Chapter・Episode・ChangeLog／自分向け閲覧・検索／非機能）。H（共同制作）・I（コミュニケーション）・J（公開・共有）・K（読者向け機能）・L（管理機能）は全てPhase 2以降に見送り → [Phase1-確定メモ.md](docs/project/Phase1-確定メモ.md)（v2.0に全面刷新）
-5. 残る実装戦略の論点（既存実装の再利用方針、communications/administrationアプリの扱い）を決定する
+5. ~~残る実装戦略の論点~~ — 完了（2026-08-22）。既存python-django実装（`implementations/python-django/`）はPenName概念の欠如など根幹の前提が異なるため**参考のみに留め、新規に作り直す**方針で確定。communications/administrationアプリもPhase 1では実装自体を行わない
 6. 画面設計（`docs/design/` 新設等）
 7. ドキュメントが固まった領域から実装に着手する
 
