@@ -1,0 +1,416 @@
+:root {
+  --color-primary: #3b6ea5;
+  --color-danger: #b4373a;
+  --color-text: #2b2b2b;
+  --color-muted: #777;
+  --color-border: #ddd;
+  --color-bg: #fafaf8;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', Meiryo, sans-serif;
+  color: var(--color-text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+}
+
+a {
+  color: var(--color-primary);
+}
+
+h1 {
+  font-size: 1.4rem;
+}
+
+/* ヘッダー（画面遷移-共通方針: 上部固定ヘッダー） */
+.app-header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 1.5rem;
+  height: 52px;
+  background: #fff;
+  border-bottom: 1px solid var(--color-border);
+  z-index: 10;
+}
+
+.app-header .logo {
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.app-header nav,
+.header-right {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.header-right {
+  margin-left: auto;
+}
+
+.app-header a {
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.app-header a.active {
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+.nav-disabled {
+  color: var(--color-muted) !important;
+  cursor: not-allowed;
+}
+
+.app-main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* ページ共通 */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.page-header h1 {
+  margin-right: auto;
+}
+
+.page-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.page-loading {
+  padding: 3rem;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--color-muted);
+  background: #fff;
+  border: 1px dashed var(--color-border);
+  border-radius: 6px;
+}
+
+/* ボタン */
+button,
+.button {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  background: #fff;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+button.primary,
+.button.primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+button.danger {
+  background: #fff;
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.link-button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.link-button:disabled {
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+/* リスト */
+.row-list {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row.clickable:hover {
+  background: #f2f6fa;
+  cursor: pointer;
+}
+
+.row-deleted {
+  opacity: 0.6;
+}
+
+.row-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.row-title {
+  font-weight: bold;
+}
+
+.row-sub {
+  display: block;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
+.row-meta {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.row-icon img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.badge {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.75rem;
+  color: #fff;
+  background: var(--color-muted);
+  border-radius: 3px;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.search-box {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  width: 220px;
+}
+
+/* フォーム */
+.auth-card,
+.form-card {
+  max-width: 480px;
+  margin: 2rem auto;
+  padding: 1.5rem 2rem;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+form label {
+  display: block;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+form input:not([type='checkbox']):not([type='file']),
+form textarea,
+form select {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.password-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.password-row input {
+  flex: 1;
+}
+
+.field-help {
+  display: block;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+.field-error {
+  display: block;
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.form-error {
+  color: var(--color-danger);
+  background: #fdf1f1;
+  padding: 0.6rem 0.9rem;
+  border-radius: 5px;
+}
+
+.form-message {
+  color: #21713c;
+  background: #eefaf1;
+  padding: 0.6rem 0.9rem;
+  border-radius: 5px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+
+.readonly-fields {
+  background: #f6f6f4;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.readonly-fields dt {
+  color: var(--color-muted);
+  float: left;
+  width: 9em;
+}
+
+.readonly-fields dd {
+  margin: 0 0 0.4rem 9em;
+}
+
+/* 詳細画面 */
+.detail-body {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.cover {
+  width: 180px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.cover-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.description {
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.danger-zone {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.danger-zone h2 {
+  font-size: 1rem;
+  color: var(--color-danger);
+}
+
+/* モーダル */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  width: min(440px, 90vw);
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.modal h2 {
+  font-size: 1.1rem;
+  margin-top: 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}

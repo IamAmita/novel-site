@@ -92,7 +92,17 @@
 - Category, Tag, NovelTag, Favorite（K区分）
 - ReportReason, Report, AccountAction（L区分）
 
-### 3.3 ChangeLogの扱い（Phase 1に残す）
+### 3.3 認証まわりの簡略化（2026-09-03決定）
+
+Phase 1は自分一人しか使わないため、**メール送信を伴う機能はすべて見送る**。
+
+- パスワードリセット（メール送信方式）: 見送り。商用利用を検討する段階で追加する
+- パスワード変更: 見送り（同上）
+- 登録時のメール確認（verification）: 行わない
+
+登録時にemail・パスワードの保存は行い、ログイン（メールアドレスまたはユーザーID＋パスワード、Django標準認証）はPhase 1でも実装する。
+
+### 3.4 ChangeLogの扱い（Phase 1に残す）
 
 ChangeLog（変更履歴・差分表示）はPhase 1の中核機能のため、当然実装する。ただし以下はPhase 1の前提（自分一人・非公開固定）により単純化できる。
 

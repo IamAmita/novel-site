@@ -173,8 +173,8 @@
    - ~~[Moderation.md](docs/domain/Moderation.md): ReportReasonの初期セット、一時停止解除（`expires_at`到達）時の自動復帰の仕組み~~ — 完了（2026-08-22、5項目の初期セット／アクセス時に都度チェック）
 4. ~~Phase分け~~ — 完了（2026-08-22）。Phase 1は**「Gitを知らなくても差分を確認しながら書ける、単独作者向けの設定・執筆管理ツール」**に決定。含めるのはA〜G区分（ユーザー最小限／World／Setting／Novel・Chapter・Episode・ChangeLog／自分向け閲覧・検索／非機能）。H（共同制作）・I（コミュニケーション）・J（公開・共有）・K（読者向け機能）・L（管理機能）は全てPhase 2以降に見送り → [Phase1-確定メモ.md](docs/project/Phase1-確定メモ.md)（v2.0に全面刷新）
 5. ~~残る実装戦略の論点~~ — 完了（2026-08-22）。既存python-django実装（`implementations/python-django/`）はPenName概念の欠如など根幹の前提が異なるため**参考のみに留め、新規に作り直す**方針で確定。communications/administrationアプリもPhase 1では実装自体を行わない
-6. 画面設計（`docs/design/` 新設等）
-7. ドキュメントが固まった領域から実装に着手する
+6. 画面設計 — 個別画面ドラフト完成（2026-09-03）。[画面一覧.md](docs/design/画面一覧.md)（画面17＋ダイアログ6確定、エクスポート画面とパスワードリセット・変更はPhase 1見送り）→ [画面遷移-共通方針.md](docs/design/画面遷移-共通方針.md)＋[画面仕様書/](docs/design/画面仕様書/README.md)（1画面1ファイル×17、ドメイン別フォルダ構成）を作成。各仕様書末尾の「設計時の判断（要レビュー）」のレビューが残タスク
+7. 実装 — 着手（2026-09-03）。新実装は `implementations/django-react/`（Django 5.2 + DRF、React未着手。DBはSQLite⇔PostgreSQL切替式）。優先順位①ユーザー・Worldのバックエンド完了: User/PenName/Worldモデル＋論理削除基盤＋メール/ユーザーID両対応の認証＋REST API（auth/pennames/worlds）、テスト41件グリーン。詳細は[implementations/django-react/README.md](implementations/django-react/README.md)。画面仕様書レビューの指摘は[レビュー残課題.md](docs/design/レビュー残課題.md)に記録し、実装しながら順次対応する方針（2026-09-03ユーザー決定）
 
 ---
 
